@@ -1,0 +1,82 @@
+<nav class="fixed top-0 w-full bg-gray-100 z-50 border-b">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex justify-between items-center h-20">
+
+      <!-- Logo -->
+      <div class="flex items-center space-x-2">
+        <img src="/assets/logo.png" alt="EmpServBoy" class="h-10" />
+      </div>
+
+      <!-- Navigation Links Desktop -->
+      <div class="hidden md:flex items-center space-x-10 text-gray-600 font-medium">
+        
+        <!-- Activo -->
+        <a href="#home"
+           class="text-blue-600 border-b-2 border-blue-600 pb-1">
+          Inicio
+        </a>
+
+        <a href="#instructivo"
+           class="hover:text-blue-600 transition">
+          Instructivo
+        </a>
+
+        <a href="#productos"
+           class="hover:text-blue-600 transition">
+          Productos
+        </a>
+
+        <a href="#blog"
+           class="hover:text-blue-600 transition">
+          Blog
+        </a>
+
+        <a href="#contacto"
+           class="hover:text-blue-600 transition">
+          Contacto
+        </a>
+      </div>
+
+      <!-- Mobile Button -->
+      <div class="md:hidden">
+        <button (click)="toggleMenu()" class="text-gray-600 hover:text-blue-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Menu -->
+    <div *ngIf="isMenuOpen" class="md:hidden pb-4 text-gray-600">
+
+      <a href="#home" (click)="closeMenu()"
+         class="block px-4 py-2 text-blue-600 font-medium">
+        Inicio
+      </a>
+
+      <a href="#instructivo" (click)="closeMenu()"
+         class="block px-4 py-2 hover:text-blue-600">
+        Instructivo
+      </a>
+
+      <a href="#productos" (click)="closeMenu()"
+         class="block px-4 py-2 hover:text-blue-600">
+        Productos
+      </a>
+
+      <a href="#blog" (click)="closeMenu()"
+         class="block px-4 py-2 hover:text-blue-600">
+        Blog
+      </a>
+
+      <a href="#contacto" (click)="closeMenu()"
+         class="block px-4 py-2 hover:text-blue-600">
+        Contacto
+      </a>
+
+    </div>
+  </div>
+</nav>

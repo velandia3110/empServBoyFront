@@ -1,0 +1,43 @@
+<section id="products" class="py-20 bg-gray-100">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-blue-800 mb-2">
+        Productos Destacados
+      </h2>
+      <p class="text-gray-500">
+        Tecnología y naturaleza unidas para soluciones sostenibles.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      <div *ngFor="let product of products"
+           class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+
+        <img [src]="product.image" [alt]="product.title"
+             class="rounded-xl mb-4 h-40 w-full object-cover" />
+
+        <h3 class="text-lg font-semibold text-blue-800">
+          {{ product.title }}
+        </h3>
+
+        <p class="text-gray-500 text-sm mt-2">
+          {{ product.description }}
+        </p>
+
+        <a class="text-blue-600 text-sm mt-4 inline-block hover:underline">
+          Ver detalles →
+        </a>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-10">
+      <button class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
+        Más información sobre productos
+      </button>
+    </div>
+
+  </div>
+</section>
