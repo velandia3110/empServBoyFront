@@ -10,13 +10,13 @@ interface Product {
 }
 
 @Component({
-  selector: 'app-section-products',
+  selector: 'app-section-features',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './section-products.component.html',
-  styleUrl: './section-products.component.css'
+  templateUrl: './section-features.component.html',
+  styleUrls: ['./section-features.component.css']
 })
-export class SectionProductsComponent implements OnInit {
+export class SectionFeaturesComponent implements OnInit {
   products: Product[] = [];
 
   ngOnInit(): void {
