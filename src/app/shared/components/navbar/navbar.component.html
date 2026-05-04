@@ -11,12 +11,15 @@
       <div class="hidden md:flex items-center space-x-10 text-gray-600 font-medium">
         
         <!-- Activo -->
-        <a href="#home"
-           class="text-blue-600 border-b-2 border-blue-600 pb-1">
+        <a routerLink="/"
+           routerLinkActive="text-blue-600 border-b-2 border-blue-600 pb-1"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="hover:text-blue-600 transition">
           Inicio
         </a>
 
-        <a href="#instructivo"
+        <a routerLink="/guide"
+           routerLinkActive="text-blue-600 border-b-2 border-blue-600 pb-1"
            class="hover:text-blue-600 transition">
           Instructivo
         </a>
@@ -52,12 +55,17 @@
     <!-- Mobile Menu -->
     <div *ngIf="isMenuOpen" class="md:hidden pb-4 text-gray-600">
 
-      <a href="#home" (click)="closeMenu()"
-         class="block px-4 py-2 text-blue-600 font-medium">
+      <a routerLink="/"
+         routerLinkActive="text-blue-600 font-medium"
+         [routerLinkActiveOptions]="{ exact: true }"
+         (click)="closeMenu()"
+         class="block px-4 py-2 hover:text-blue-600">
         Inicio
       </a>
 
-      <a href="#instructivo" (click)="closeMenu()"
+      <a routerLink="/guide"
+         routerLinkActive="text-blue-600 font-medium"
+         (click)="closeMenu()"
          class="block px-4 py-2 hover:text-blue-600">
         Instructivo
       </a>
