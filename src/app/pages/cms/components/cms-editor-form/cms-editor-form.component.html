@@ -20,7 +20,8 @@
       </button>
       <button
         (click)="onSaveDraft()"
-        class="px-5 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors">
+        [disabled]="!title.trim()"
+        class="px-5 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         Guardar Borrador
       </button>
       <button
@@ -61,35 +62,25 @@
 
         <!-- Format toolbar -->
         <div class="flex items-center gap-1 pb-3 mb-3 border-b border-gray-100">
-          <button
-            (click)="applyFormat('bold')"
+          <button (click)="applyFormat('bold')"
             class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded font-bold text-sm"
-            title="Negrita">
-            B
-          </button>
-          <button
-            (click)="applyFormat('italic')"
+            title="Negrita">B</button>
+          <button (click)="applyFormat('italic')"
             class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded italic text-sm"
-            title="Cursiva">
-            I
-          </button>
-          <button
-            (click)="applyFormat('list')"
-            class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded text-sm"
+            title="Cursiva">I</button>
+          <button (click)="applyFormat('list')"
+            class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded"
             title="Lista">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
             </svg>
           </button>
-          <button
-            (click)="applyFormat('link')"
-            class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded text-sm"
+          <button (click)="applyFormat('link')"
+            class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded"
             title="Enlace">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
-              </path>
+                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
             </svg>
           </button>
         </div>
@@ -108,19 +99,14 @@
         <div class="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
           <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
-            </path>
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
           </svg>
         </div>
         <div class="flex-1 min-w-0">
           <p class="text-sm font-semibold text-gray-800">Sugerencia de Optimización</p>
-          <p class="text-xs text-gray-500 mt-1">
-            Incluya palabras clave como "Sostenibilidad" y "Ecología" para mayor alcance.
-          </p>
+          <p class="text-xs text-gray-500 mt-1">Incluya palabras clave como "Sostenibilidad" y "Ecología" para mayor alcance.</p>
         </div>
-        <button class="text-blue-600 text-xs hover:underline whitespace-nowrap font-medium flex-shrink-0">
-          Ver detalles
-        </button>
+        <button class="text-blue-600 text-xs hover:underline whitespace-nowrap font-medium flex-shrink-0">Ver detalles</button>
       </div>
 
     </div>
@@ -130,14 +116,14 @@
 
       <!-- Category -->
       <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
-          Categoría
-        </label>
+        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Categoría</label>
         <select
           [(ngModel)]="selectedCategory"
-          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent appearance-none bg-white cursor-pointer transition-all">
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 appearance-none bg-white cursor-pointer">
           <option value="">Seleccionar Categoría</option>
-          <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.label }}</option>
+          @for (cat of categories; track cat.value) {
+            <option [value]="cat.value">{{ cat.label }}</option>
+          }
         </select>
       </div>
 
@@ -146,25 +132,36 @@
         <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
           Cargar Imagen de Portada
         </label>
-        <div
-          (click)="triggerFileInput()"
-          class="border-2 border-dashed border-gray-200 rounded-lg p-5 flex flex-col items-center justify-center cursor-pointer hover:border-green-400 hover:bg-green-50 transition-all">
-          <svg class="w-8 h-8 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12">
-            </path>
-          </svg>
-          <p class="text-xs text-gray-400 text-center">
-            {{ selectedFileName || 'Subir archivo (JPG, PNG)' }}
-          </p>
-        </div>
-        <input
-          id="coverImage"
-          type="file"
-          accept="image/jpeg,image/png"
-          (change)="onFileSelected($event)"
-          class="hidden"
-        />
+
+        @if (imagePreview) {
+          <div class="relative mb-2">
+            <img [src]="imagePreview" alt="Preview" class="w-full h-36 object-cover rounded-lg" />
+            <button
+              (click)="removeImage()"
+              class="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <button (click)="triggerFileInput()"
+            class="w-full text-xs text-gray-400 hover:text-gray-600 text-center mt-1">
+            Cambiar imagen
+          </button>
+        } @else {
+          <div
+            (click)="triggerFileInput()"
+            class="border-2 border-dashed border-gray-200 rounded-lg p-5 flex flex-col items-center justify-center cursor-pointer hover:border-green-400 hover:bg-green-50 transition-all">
+            <svg class="w-8 h-8 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+            </svg>
+            <p class="text-xs text-gray-400 text-center">Subir archivo (JPG, PNG)</p>
+          </div>
+        }
+
+        <input id="coverImage" type="file" accept="image/jpeg,image/png"
+          (change)="onFileSelected($event)" class="hidden" />
       </div>
 
       <!-- Video link -->
@@ -172,18 +169,13 @@
         <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
           Enlace de Video (YouTube)
         </label>
-        <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-transparent transition-all">
+        <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400 transition-all">
           <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
-            </path>
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
           </svg>
-          <input
-            type="url"
-            [(ngModel)]="videoLink"
-            placeholder="https://youtube.com/..."
-            class="flex-1 text-sm text-gray-600 placeholder-gray-300 focus:outline-none min-w-0"
-          />
+          <input type="url" [(ngModel)]="videoLink" placeholder="https://youtube.com/..."
+            class="flex-1 text-sm text-gray-600 placeholder-gray-300 focus:outline-none min-w-0" />
         </div>
       </div>
 
@@ -193,35 +185,20 @@
           Estado de Publicación
         </label>
         <div class="space-y-3 mt-3">
-
           <label class="flex items-start gap-3 cursor-pointer group">
-            <input
-              type="radio"
-              name="pubStatus"
-              value="public"
-              [(ngModel)]="publicationStatus"
-              class="mt-0.5 accent-blue-600"
-            />
+            <input type="radio" name="pubStatus" value="public" [(ngModel)]="publicationStatus" class="mt-0.5 accent-blue-600" />
             <div>
               <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">Público</p>
               <p class="text-xs text-gray-400">Visible para todos</p>
             </div>
           </label>
-
           <label class="flex items-start gap-3 cursor-pointer group">
-            <input
-              type="radio"
-              name="pubStatus"
-              value="draft"
-              [(ngModel)]="publicationStatus"
-              class="mt-0.5 accent-blue-600"
-            />
+            <input type="radio" name="pubStatus" value="draft" [(ngModel)]="publicationStatus" class="mt-0.5 accent-blue-600" />
             <div>
               <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">Borrador</p>
               <p class="text-xs text-gray-400">Solo editores</p>
             </div>
           </label>
-
         </div>
       </div>
 
@@ -229,21 +206,22 @@
   </div>
 </div>
 
-<!-- Bottom status bar (fixed) -->
+<!-- Bottom status bar -->
 <div class="fixed bottom-0 left-56 right-0 bg-white border-t border-gray-200 px-8 py-3 flex items-center justify-between z-10">
   <div class="flex items-center gap-6 text-xs text-gray-400">
+    @if (lastSaved) {
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        último guardado: {{ lastSaved }}
+      </span>
+    }
     <span class="flex items-center gap-1.5">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-      </svg>
-      último guardado: {{ lastSaved }}
-    </span>
-    <span class="flex items-center gap-1.5">
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-        </path>
+          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
       </svg>
       Autor: {{ author }}
     </span>

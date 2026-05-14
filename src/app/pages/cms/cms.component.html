@@ -2,6 +2,17 @@
   <app-cms-sidebar></app-cms-sidebar>
   <app-cms-top-bar></app-cms-top-bar>
   <main class="ml-56 pt-12 min-h-screen">
-    <app-cms-editor-form></app-cms-editor-form>
+
+    @if (view === 'list') {
+      <app-cms-content-list (newContent)="showEditor()"></app-cms-content-list>
+    }
+
+    @if (view === 'editor') {
+      <app-cms-editor-form
+        (saved)="showList()"
+        (cancelled)="showList()">
+      </app-cms-editor-form>
+    }
+
   </main>
 </div>
