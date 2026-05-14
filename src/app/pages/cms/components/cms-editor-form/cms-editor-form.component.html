@@ -1,0 +1,255 @@
+<!-- Page header banner -->
+<div class="bg-white px-8 py-6 border-b border-gray-200">
+  <div class="flex items-start justify-between gap-6">
+
+    <div>
+      <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
+        Editor Ambiental
+      </span>
+      <h1 class="text-3xl font-extrabold text-blue-900 leading-tight">Nueva publicación educativa</h1>
+      <p class="text-gray-500 mt-2 text-sm max-w-lg">
+        Cree y distribuya contenido sobre sostenibilidad y gestión de recursos para la comunidad EmpServBoy.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2 mt-1 flex-shrink-0">
+      <button
+        (click)="onCancel()"
+        class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">
+        Cancelar
+      </button>
+      <button
+        (click)="onSaveDraft()"
+        class="px-5 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors">
+        Guardar Borrador
+      </button>
+      <button
+        (click)="onPreview()"
+        class="px-5 py-2 text-sm bg-yellow-400 text-gray-800 rounded-lg hover:bg-yellow-500 font-medium transition-colors">
+        Previsualizar
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Form body -->
+<div class="px-8 py-6 pb-20">
+  <div class="flex gap-6">
+
+    <!-- Left column -->
+    <div class="flex-1 space-y-5">
+
+      <!-- Title input -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+          Título del Contenido
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="title"
+          placeholder="Ej: Importancia del Tratamiento de Aguas Residuales"
+          class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-700 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+        />
+      </div>
+
+      <!-- Description editor -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+          Descripción/Texto Principal
+        </label>
+
+        <!-- Format toolbar -->
+        <div class="flex items-center gap-1 pb-3 mb-3 border-b border-gray-100">
+          <button
+            (click)="applyFormat('bold')"
+            class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded font-bold text-sm"
+            title="Negrita">
+            B
+          </button>
+          <button
+            (click)="applyFormat('italic')"
+            class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded italic text-sm"
+            title="Cursiva">
+            I
+          </button>
+          <button
+            (click)="applyFormat('list')"
+            class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded text-sm"
+            title="Lista">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+            </svg>
+          </button>
+          <button
+            (click)="applyFormat('link')"
+            class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded text-sm"
+            title="Enlace">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
+              </path>
+            </svg>
+          </button>
+        </div>
+
+        <textarea
+          id="description"
+          [(ngModel)]="description"
+          placeholder="Describa el propósito y detalles de este instructivo ambiental..."
+          rows="9"
+          class="w-full text-sm text-gray-700 placeholder-gray-300 focus:outline-none resize-none leading-relaxed"
+        ></textarea>
+      </div>
+
+      <!-- Optimization suggestion -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 border-l-4 border-l-green-500 flex items-start gap-4">
+        <div class="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+            </path>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-gray-800">Sugerencia de Optimización</p>
+          <p class="text-xs text-gray-500 mt-1">
+            Incluya palabras clave como "Sostenibilidad" y "Ecología" para mayor alcance.
+          </p>
+        </div>
+        <button class="text-blue-600 text-xs hover:underline whitespace-nowrap font-medium flex-shrink-0">
+          Ver detalles
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Right column -->
+    <div class="w-64 space-y-4 flex-shrink-0">
+
+      <!-- Category -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+          Categoría
+        </label>
+        <select
+          [(ngModel)]="selectedCategory"
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent appearance-none bg-white cursor-pointer transition-all">
+          <option value="">Seleccionar Categoría</option>
+          <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.label }}</option>
+        </select>
+      </div>
+
+      <!-- Image upload -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+          Cargar Imagen de Portada
+        </label>
+        <div
+          (click)="triggerFileInput()"
+          class="border-2 border-dashed border-gray-200 rounded-lg p-5 flex flex-col items-center justify-center cursor-pointer hover:border-green-400 hover:bg-green-50 transition-all">
+          <svg class="w-8 h-8 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12">
+            </path>
+          </svg>
+          <p class="text-xs text-gray-400 text-center">
+            {{ selectedFileName || 'Subir archivo (JPG, PNG)' }}
+          </p>
+        </div>
+        <input
+          id="coverImage"
+          type="file"
+          accept="image/jpeg,image/png"
+          (change)="onFileSelected($event)"
+          class="hidden"
+        />
+      </div>
+
+      <!-- Video link -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+          Enlace de Video (YouTube)
+        </label>
+        <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-transparent transition-all">
+          <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
+            </path>
+          </svg>
+          <input
+            type="url"
+            [(ngModel)]="videoLink"
+            placeholder="https://youtube.com/..."
+            class="flex-1 text-sm text-gray-600 placeholder-gray-300 focus:outline-none min-w-0"
+          />
+        </div>
+      </div>
+
+      <!-- Publication status -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
+          Estado de Publicación
+        </label>
+        <div class="space-y-3 mt-3">
+
+          <label class="flex items-start gap-3 cursor-pointer group">
+            <input
+              type="radio"
+              name="pubStatus"
+              value="public"
+              [(ngModel)]="publicationStatus"
+              class="mt-0.5 accent-blue-600"
+            />
+            <div>
+              <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">Público</p>
+              <p class="text-xs text-gray-400">Visible para todos</p>
+            </div>
+          </label>
+
+          <label class="flex items-start gap-3 cursor-pointer group">
+            <input
+              type="radio"
+              name="pubStatus"
+              value="draft"
+              [(ngModel)]="publicationStatus"
+              class="mt-0.5 accent-blue-600"
+            />
+            <div>
+              <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">Borrador</p>
+              <p class="text-xs text-gray-400">Solo editores</p>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Bottom status bar (fixed) -->
+<div class="fixed bottom-0 left-56 right-0 bg-white border-t border-gray-200 px-8 py-3 flex items-center justify-between z-10">
+  <div class="flex items-center gap-6 text-xs text-gray-400">
+    <span class="flex items-center gap-1.5">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      último guardado: {{ lastSaved }}
+    </span>
+    <span class="flex items-center gap-1.5">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+        </path>
+      </svg>
+      Autor: {{ author }}
+    </span>
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+    <span class="text-xs font-semibold text-gray-600 uppercase tracking-wide">Sistema Conectado</span>
+  </div>
+</div>
