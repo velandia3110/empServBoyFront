@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface NavItem {
   id: string;
@@ -24,7 +25,13 @@ export class CmsSidebarComponent {
     { id: 'configuracion', label: 'Configuración' }
   ];
 
+  constructor(private router: Router) {}
+
   setActive(id: string): void {
     this.activeItem = id;
+  }
+
+  goHome(): void {
+    this.router.navigate(['/']);
   }
 }
