@@ -3,6 +3,7 @@ import { CmsSidebarComponent } from './components/cms-sidebar/cms-sidebar.compon
 import { CmsTopBarComponent } from './components/cms-top-bar/cms-top-bar.component';
 import { CmsEditorFormComponent } from './components/cms-editor-form/cms-editor-form.component';
 import { CmsContentListComponent } from './components/cms-content-list/cms-content-list.component';
+import { ArticleWithRelations } from '../../core/models/article.model';
 
 @Component({
   selector: 'app-cms',
@@ -18,7 +19,20 @@ import { CmsContentListComponent } from './components/cms-content-list/cms-conte
 })
 export class CmsComponent {
   view: 'list' | 'editor' = 'list';
+  articleToEdit: ArticleWithRelations | null = null;
 
-  showEditor(): void { this.view = 'editor'; }
-  showList(): void  { this.view = 'list';   }
+  showEditor(): void {
+    this.articleToEdit = null;
+    this.view = 'editor';
+  }
+
+  editArticle(article: ArticleWithRelations): void {
+    this.articleToEdit = article;
+    this.view = 'editor';
+  }
+
+  showList(): void {
+    this.articleToEdit = null;
+    this.view = 'list';
+  }
 }

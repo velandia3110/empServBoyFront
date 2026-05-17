@@ -1,7 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CmsContentService, ContentItem, ContentType } from '../../services/cms-content.service';
+import { ArticlesService } from '../../../../core/services/articles.service';
+import { ArticleWithRelations } from '../../../../core/models/article.model';
 
 @Component({
   selector: 'app-cms-content-list',
@@ -12,41 +13,43 @@ import { CmsContentService, ContentItem, ContentType } from '../../services/cms-
 })
 export class CmsContentListComponent implements OnInit {
   @Output() newContent = new EventEmitter<void>();
+  @Output() editContent = new EventEmitter<ArticleWithRelations>();
 
-  allItems: ContentItem[] = [];
-  filteredItems: ContentItem[] = [];
-  pagedItems: ContentItem[] = [];
+  allItems: ArticleWithRelations[] = [];
+  filteredItems: ArticleWithRelations[] = [];
+  pagedItems: ArticleWithRelations[] = [];
 
-  filterType = 'todos';
-  filterDate = 'cualquiera';
+  loading = true;
+  errorMsg = '';
 
   currentPage = 1;
   pageSize = 4;
   totalPages = 1;
 
-  typeOptions = [
-    { value: 'todos', label: 'Todos los tipos' },
-    { value: 'TUTORIAL', label: 'Tutorial' },
-    { value: 'BLOG', label: 'Blog' },
-    { value: 'INSTRUCTIVO', label: 'Instructivo' }
-  ];
-
-  constructor(private contentService: CmsContentService) {}
+  constructor(private articlesService: ArticlesService) {}
 
   ngOnInit(): void {
     this.load();
   }
 
   load(): void {
-    this.allItems = this.contentService.getAll();
-    this.applyFilters();
+    this.loading = true;
+    this.errorMsg = '';
+    this.articlesService.getAll().subscribe({
+      next: data => {
+        this.allItems = data;
+        this.applyFilters();
+        this.loading = false;
+      },
+      error: () => {
+        this.errorMsg = 'No se pudieron cargar los artículos.';
+        this.loading = false;
+      }
+    });
   }
 
   applyFilters(): void {
-    this.filteredItems = this.allItems.filter(item => {
-      const matchType = this.filterType === 'todos' || item.type === this.filterType;
-      return matchType;
-    });
+    this.filteredItems = [...this.allItems];
     this.currentPage = 1;
     this.updatePage();
   }
@@ -75,25 +78,35 @@ export class CmsContentListComponent implements OnInit {
     return Math.min(this.currentPage * this.pageSize, this.filteredItems.length);
   }
 
-  deleteItem(id: number): void {
-    this.contentService.delete(id);
-    this.load();
+  deleteItem(id: string): void {
+    if (!confirm('¿Eliminar este artículo?')) return;
+    this.articlesService.delete(id).subscribe({
+      next: () => this.load(),
+      error: () => alert('No se pudo eliminar el artículo.')
+    });
   }
 
-  typeBadgeClass(type: ContentType): string {
-    const map: Record<ContentType, string> = {
-      TUTORIAL: 'bg-blue-600 text-white',
-      BLOG: 'bg-lime-400 text-gray-800',
-      INSTRUCTIVO: 'bg-slate-500 text-white'
-    };
-    return map[type] ?? 'bg-gray-200 text-gray-700';
+  editItem(article: ArticleWithRelations): void {
+    this.editContent.emit(article);
   }
 
-  statusClass(status: string): string {
-    return status === 'Publicado' ? 'text-green-600' : 'text-orange-500';
+  authorName(article: ArticleWithRelations): string {
+    return article.user ? `${article.user.firstName} ${article.user.lastName}` : 'Desconocido';
   }
 
-  dotClass(status: string): string {
-    return status === 'Publicado' ? 'bg-green-500' : 'bg-orange-400';
+  formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('es-CO', {
+      day: '2-digit', month: 'short', year: 'numeric'
+    });
+  }
+
+  firstImage(article: ArticleWithRelations): string | null {
+    const img = article.multimedia?.find(m => m.type === 'IMAGE');
+    return img?.resourceUrl ?? null;
+  }
+
+  firstText(article: ArticleWithRelations): string {
+    const txt = article.multimedia?.find(m => m.type === 'TEXT');
+    return txt?.content?.substring(0, 80) ?? '';
   }
 }

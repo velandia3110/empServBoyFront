@@ -10,28 +10,34 @@
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-      <div *ngFor="let product of products"
-           class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition">
-
-        <img [src]="product.image" [alt]="product.title"
-             class="rounded-xl mb-4 h-40 w-full object-cover" />
-
-        <h3 class="text-lg font-semibold text-blue-800">
-          {{ product.title }}
-        </h3>
-
-        <p class="text-gray-500 text-sm mt-2">
-          {{ product.description }}
-        </p>
-
-        <a class="text-blue-600 text-sm mt-4 inline-block hover:underline">
-          Ver detalles →
-        </a>
+    @if (loading) {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        @for (_ of [1,2,3]; track $index) {
+          <div class="bg-white rounded-2xl p-4 shadow-sm animate-pulse">
+            <div class="rounded-xl mb-4 h-40 w-full bg-gray-200"></div>
+            <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+            <div class="h-4 bg-gray-200 rounded w-full mb-1"></div>
+            <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+          </div>
+        }
       </div>
-
-    </div>
+    } @else if (error) {
+      <p class="text-center text-red-500">No se pudieron cargar los productos. Intenta más tarde.</p>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        @for (product of products; track product.productId) {
+          <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+            <img [src]="getFirstImage(product)" [alt]="getFirstAlt(product)"
+                 class="rounded-xl mb-4 h-40 w-full object-cover" />
+            <h3 class="text-lg font-semibold text-blue-800">{{ product.name }}</h3>
+            <p class="text-gray-500 text-sm mt-2">{{ product.description }}</p>
+            <a class="text-blue-600 text-sm mt-4 inline-block hover:underline cursor-pointer">
+              Ver detalles →
+            </a>
+          </div>
+        }
+      </div>
+    }
 
     <div class="text-center mt-10">
       <button class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">

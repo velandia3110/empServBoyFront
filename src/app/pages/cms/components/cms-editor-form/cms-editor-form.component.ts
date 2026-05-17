@@ -1,13 +1,8 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CmsContentService, ContentType } from '../../services/cms-content.service';
-
-interface Category {
-  value: string;
-  label: string;
-  type: ContentType;
-}
+import { ArticlesService } from '../../../../core/services/articles.service';
+import { ArticleWithRelations, MultimediaBlock, MultimediaType } from '../../../../core/models/article.model';
 
 @Component({
   selector: 'app-cms-editor-form',
@@ -16,117 +11,104 @@ interface Category {
   templateUrl: './cms-editor-form.component.html',
   styleUrl: './cms-editor-form.component.css'
 })
-export class CmsEditorFormComponent {
+export class CmsEditorFormComponent implements OnChanges {
+  @Input() article: ArticleWithRelations | null = null;
   @Output() saved = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
 
   title = '';
-  description = '';
-  selectedCategory = '';
-  videoLink = '';
-  publicationStatus: 'draft' | 'public' = 'draft';
-  selectedFileName = '';
-  imagePreview: string | null = null;
+  blocks: MultimediaBlock[] = [];
+  loading = false;
   lastSaved = '';
-  author = 'Admin_Sustentabilidad';
+  errorMsg = '';
 
-  categories: Category[] = [
-    { value: 'sostenibilidad', label: 'Sostenibilidad', type: 'BLOG' },
-    { value: 'residuos', label: 'Gestión de Residuos', type: 'INSTRUCTIVO' },
-    { value: 'energia', label: 'Energía Renovable', type: 'TUTORIAL' },
-    { value: 'biodiversidad', label: 'Biodiversidad', type: 'BLOG' },
-    { value: 'agua', label: 'Recursos Hídricos', type: 'INSTRUCTIVO' }
-  ];
+  get isEditing(): boolean { return !!this.article; }
 
-  constructor(private contentService: CmsContentService) {}
+  constructor(private articlesService: ArticlesService) {}
 
-  onSaveDraft(): void {
-    if (!this.title.trim()) return;
-
-    const cat = this.categories.find(c => c.value === this.selectedCategory);
-    const now = new Date();
-    const formatted = now.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
-
-    this.contentService.add({
-      title: this.title.trim(),
-      author: this.author,
-      type: cat?.type ?? 'TUTORIAL',
-      publishDate: this.publicationStatus === 'public' ? formatted : null,
-      status: this.publicationStatus === 'public' ? 'Publicado' : 'Borrador',
-      imageUrl: this.imagePreview,
-      description: this.description,
-      category: this.selectedCategory,
-      videoLink: this.videoLink
-    });
-
-    this.lastSaved = 'Ahora mismo';
-    this.saved.emit();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['article']) {
+      this.loadArticle();
+    }
   }
 
-  onPreview(): void {}
-
-  onCancel(): void {
-    this.resetForm();
-    this.cancelled.emit();
+  private loadArticle(): void {
+    if (this.article) {
+      this.title = this.article.title;
+      this.blocks = this.article.multimedia.map(m => ({
+        multimediaId: m.multimediaId,
+        type: m.type,
+        content: m.content ?? '',
+        resourceUrl: m.resourceUrl ?? ''
+      }));
+    } else {
+      this.resetForm();
+    }
   }
 
-  onFileSelected(event: Event): void {
+  addBlock(type: MultimediaType): void {
+    this.blocks.push({ type, content: '', resourceUrl: '' });
+  }
+
+  removeBlock(index: number): void {
+    this.blocks.splice(index, 1);
+  }
+
+  onFileSelected(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
-    if (!input.files || !input.files[0]) return;
-
-    const file = input.files[0];
-    this.selectedFileName = file.name;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.imagePreview = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
+    if (!input.files?.[0]) return;
+    this.blocks[index].file = input.files[0];
+    this.blocks[index].resourceUrl = '';
   }
 
-  triggerFileInput(): void {
-    (document.getElementById('coverImage') as HTMLInputElement)?.click();
-  }
-
-  removeImage(): void {
-    this.imagePreview = null;
-    this.selectedFileName = '';
-    const input = document.getElementById('coverImage') as HTMLInputElement;
-    if (input) input.value = '';
-  }
-
-  applyFormat(format: string): void {
-    const textarea = document.getElementById('description') as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selected = this.description.substring(start, end);
-
+  applyFormat(format: string, index: number): void {
+    const block = this.blocks[index];
+    if (block.type !== 'TEXT') return;
     const wrappers: Record<string, [string, string]> = {
       bold: ['**', '**'],
       italic: ['_', '_'],
       list: ['\n- ', ''],
       link: ['[', '](url)']
     };
-
     const wrap = wrappers[format];
     if (!wrap) return;
+    block.content = (block.content ?? '') + wrap[0] + wrap[1];
+  }
 
-    this.description =
-      this.description.substring(0, start) +
-      wrap[0] + selected + wrap[1] +
-      this.description.substring(end);
+  onSave(): void {
+    if (!this.title.trim()) {
+      this.errorMsg = 'El título es requerido.';
+      return;
+    }
+    this.loading = true;
+    this.errorMsg = '';
+
+    const request = this.isEditing
+      ? this.articlesService.update(this.article!.articleId, this.title, this.blocks)
+      : this.articlesService.create(this.title, this.blocks);
+
+    request.subscribe({
+      next: () => {
+        this.loading = false;
+        this.lastSaved = 'Ahora mismo';
+        this.saved.emit();
+      },
+      error: () => {
+        this.loading = false;
+        this.errorMsg = 'Ocurrió un error al guardar. Intenta de nuevo.';
+      }
+    });
+  }
+
+  onCancel(): void {
+    this.resetForm();
+    this.cancelled.emit();
   }
 
   private resetForm(): void {
     this.title = '';
-    this.description = '';
-    this.selectedCategory = '';
-    this.videoLink = '';
-    this.publicationStatus = 'draft';
-    this.selectedFileName = '';
-    this.imagePreview = null;
+    this.blocks = [];
     this.lastSaved = '';
+    this.errorMsg = '';
   }
 }
