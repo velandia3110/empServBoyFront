@@ -4,11 +4,15 @@
   <main class="ml-56 pt-12 min-h-screen">
 
     @if (view === 'list') {
-      <app-cms-content-list (newContent)="showEditor()"></app-cms-content-list>
+      <app-cms-content-list
+        (newContent)="showEditor()"
+        (editContent)="editArticle($event)">
+      </app-cms-content-list>
     }
 
     @if (view === 'editor') {
       <app-cms-editor-form
+        [article]="articleToEdit"
         (saved)="showList()"
         (cancelled)="showList()">
       </app-cms-editor-form>

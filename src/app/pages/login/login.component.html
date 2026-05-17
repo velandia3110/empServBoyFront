@@ -50,20 +50,20 @@
         <!-- Form -->
         <form (ngSubmit)="onSubmit()" class="w-full flex flex-col gap-4">
 
-          <!-- Username -->
+          <!-- Email -->
           <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium text-gray-600">Nombre de usuario</label>
+            <label class="text-sm font-medium text-gray-600">Correo electrónico</label>
             <div class="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-blue-400 transition-all">
               <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
               </svg>
               <input
-                type="text"
-                [(ngModel)]="username"
-                name="username"
-                placeholder="Enter your ID"
-                autocomplete="username"
+                type="email"
+                [(ngModel)]="email"
+                name="email"
+                placeholder="correo@empresa.com"
+                autocomplete="email"
                 class="flex-1 bg-transparent text-sm text-gray-700 placeholder-gray-400 focus:outline-none"
               />
             </div>
@@ -86,14 +86,17 @@
                 class="flex-1 bg-transparent text-sm text-gray-700 placeholder-gray-400 focus:outline-none"
               />
               <button type="button" (click)="showPassword = !showPassword" class="text-gray-400 hover:text-gray-600">
-                <svg *ngIf="!showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-3-9C7.477 3 3 7.477 3 12s4.477 9 9 9 9-4.477 9-9S16.523 3 12 3z"/>
-                </svg>
-                <svg *ngIf="showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-9a9.96 9.96 0 012.929-7.072M6.343 6.343A8 8 0 0112 4c4.418 0 8 3.582 8 8a7.96 7.96 0 01-1.172 4.13M3 3l18 18"/>
-                </svg>
+                @if (!showPassword) {
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-3-9C7.477 3 3 7.477 3 12s4.477 9 9 9 9-4.477 9-9S16.523 3 12 3z"/>
+                  </svg>
+                } @else {
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-9a9.96 9.96 0 012.929-7.072M6.343 6.343A8 8 0 0112 4c4.418 0 8 3.582 8 8a7.96 7.96 0 01-1.172 4.13M3 3l18 18"/>
+                  </svg>
+                }
               </button>
             </div>
           </div>
@@ -110,19 +113,22 @@
           </label>
 
           <!-- Error message -->
-          <p *ngIf="errorMessage" class="text-red-500 text-xs text-center -mt-1">
-            {{ errorMessage }}
-          </p>
+          @if (errorMessage) {
+            <p class="text-red-500 text-xs text-center -mt-1">{{ errorMessage }}</p>
+          }
 
           <!-- Submit button -->
           <button
             type="submit"
-            class="w-full bg-lime-400 hover:bg-lime-500 text-gray-800 font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors mt-1">
-            Iniciar Sesión
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-            </svg>
+            [disabled]="loading"
+            class="w-full bg-lime-400 hover:bg-lime-500 disabled:opacity-60 text-gray-800 font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors mt-1">
+            {{ loading ? 'Iniciando...' : 'Iniciar Sesión' }}
+            @if (!loading) {
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            }
           </button>
 
         </form>
