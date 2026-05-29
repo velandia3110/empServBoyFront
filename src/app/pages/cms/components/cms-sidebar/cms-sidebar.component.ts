@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -14,8 +14,9 @@ interface NavItem {
   templateUrl: './cms-sidebar.component.html',
   styleUrl: './cms-sidebar.component.css'
 })
-export class CmsSidebarComponent {
-  activeItem = 'gestion';
+export class CmsSidebarComponent implements OnChanges {
+  @Input() activeItem = 'escritorio';
+  @Output() sectionChange = new EventEmitter<string>();
 
   navItems: NavItem[] = [
     { id: 'escritorio', label: 'Escritorio' },
@@ -27,11 +28,17 @@ export class CmsSidebarComponent {
 
   constructor(private router: Router) {}
 
-  setActive(id: string): void {
-    this.activeItem = id;
+  ngOnChanges(changes: SimpleChanges): void {
+    // activeItem is controlled by parent
   }
 
-  goHome(): void {
-    this.router.navigate(['/']);
+  setActive(id: string): void {
+    this.sectionChange.emit(id);
+  }
+
+  logout(): void {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    this.router.navigate(['/login']);
   }
 }
