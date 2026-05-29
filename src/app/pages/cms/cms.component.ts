@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CmsSidebarComponent } from './components/cms-sidebar/cms-sidebar.component';
 import { CmsTopBarComponent } from './components/cms-top-bar/cms-top-bar.component';
 import { CmsEditorFormComponent } from './components/cms-editor-form/cms-editor-form.component';
@@ -9,6 +10,7 @@ import { ArticleWithRelations } from '../../core/models/article.model';
   selector: 'app-cms',
   standalone: true,
   imports: [
+    CommonModule,
     CmsSidebarComponent,
     CmsTopBarComponent,
     CmsEditorFormComponent,
@@ -19,7 +21,16 @@ import { ArticleWithRelations } from '../../core/models/article.model';
 })
 export class CmsComponent {
   view: 'list' | 'editor' = 'list';
+  activeSection = 'gestion';
   articleToEdit: ArticleWithRelations | null = null;
+
+  onSectionChange(section: string): void {
+    this.activeSection = section;
+    if (this.view === 'editor') {
+      this.view = 'list';
+      this.articleToEdit = null;
+    }
+  }
 
   showEditor(): void {
     this.articleToEdit = null;

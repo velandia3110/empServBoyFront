@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -15,6 +15,8 @@ interface NavItem {
   styleUrl: './cms-sidebar.component.css'
 })
 export class CmsSidebarComponent {
+  @Output() sectionChange = new EventEmitter<string>();
+
   activeItem = 'gestion';
 
   navItems: NavItem[] = [
@@ -29,9 +31,12 @@ export class CmsSidebarComponent {
 
   setActive(id: string): void {
     this.activeItem = id;
+    this.sectionChange.emit(id);
   }
 
-  goHome(): void {
-    this.router.navigate(['/']);
+  logout(): void {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    this.router.navigate(['/login']);
   }
 }

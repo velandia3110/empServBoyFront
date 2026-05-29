@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ArticlesService } from '../../../../core/services/articles.service';
@@ -9,8 +9,7 @@ import { ArticleWithRelations } from '../../../../core/models/article.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './cms-content-list.component.html',
-  styleUrl: './cms-content-list.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './cms-content-list.component.css'
 })
 export class CmsContentListComponent implements OnInit {
   @Output() newContent = new EventEmitter<void>();

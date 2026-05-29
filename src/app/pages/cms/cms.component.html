@@ -1,13 +1,54 @@
 <div class="min-h-screen bg-gray-50">
-  <app-cms-sidebar></app-cms-sidebar>
+  <app-cms-sidebar (sectionChange)="onSectionChange($event)"></app-cms-sidebar>
   <app-cms-top-bar></app-cms-top-bar>
   <main class="ml-56 pt-12 min-h-screen">
 
     @if (view === 'list') {
-      <app-cms-content-list
-        (newContent)="showEditor()"
-        (editContent)="editArticle($event)">
-      </app-cms-content-list>
+      <!-- Escritorio: resumen rápido -->
+      @if (activeSection === 'escritorio') {
+        <div class="bg-white px-8 py-5 border-b border-gray-200">
+          <h1 class="text-xl font-bold text-blue-900">Escritorio</h1>
+          <p class="text-sm text-gray-400 mt-0.5">Panel de control del CMS</p>
+        </div>
+        <div class="px-8 pt-6 pb-12">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+              <p class="text-sm text-gray-400 mb-1">Total de artículos</p>
+              <p class="text-3xl font-bold text-blue-700">—</p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+              <p class="text-sm text-gray-400 mb-1">Publicados</p>
+              <p class="text-3xl font-bold text-green-600">—</p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+              <p class="text-sm text-gray-400 mb-1">Borradores</p>
+              <p class="text-3xl font-bold text-yellow-500">—</p>
+            </div>
+          </div>
+          <p class="text-sm text-gray-400 text-center">
+            Usa "Gestión de Contenidos" en el menú para administrar tus artículos.
+          </p>
+        </div>
+      }
+
+      <!-- Gestión / Instructivos / Blog → lista de artículos -->
+      @if (activeSection === 'gestion' || activeSection === 'instructivos' || activeSection === 'blog') {
+        <app-cms-content-list
+          (newContent)="showEditor()"
+          (editContent)="editArticle($event)">
+        </app-cms-content-list>
+      }
+
+      <!-- Configuración -->
+      @if (activeSection === 'configuracion') {
+        <div class="bg-white px-8 py-5 border-b border-gray-200">
+          <h1 class="text-xl font-bold text-blue-900">Configuración</h1>
+          <p class="text-sm text-gray-400 mt-0.5">Ajustes del panel de administración</p>
+        </div>
+        <div class="px-8 pt-8 pb-12 text-center text-gray-400 text-sm">
+          Próximamente disponible.
+        </div>
+      }
     }
 
     @if (view === 'editor') {
