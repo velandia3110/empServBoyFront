@@ -1,12 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-}
+import { ProductsService } from '../../../../core/services/products.service';
+import { ProductWithImages } from '../../../../core/models/product.model';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-section-products',
@@ -16,32 +12,37 @@ interface Product {
   styleUrl: './section-products.component.css'
 })
 export class SectionProductsComponent implements OnInit {
-  products: Product[] = [];
+  private productsService = inject(ProductsService);
+  private cdr = inject(ChangeDetectorRef);
+
+  products: ProductWithImages[] = [];
+  loading = true;
+  error = false;
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.productsService.getAll().subscribe({
+      next: data => {
+        this.products = data;
+        this.loading = false;
+        this.cdr.detectChanges()
+      },
+      error: () => {
+        this.error = true;
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  private loadProducts(): void {
-    this.products = [
-      {
-        id: 1,
-        title: 'Sistema de Filtración',
-        description: 'Tecnología avanzada para purificación de agua con máxima eficiencia y durabilidad.',
-        image: '/assets/filtro.jpg'
-      },
-      {
-        id: 2,
-        title: 'Abono Orgánico',
-        description: 'Fertilizante natural que mejora la calidad del suelo y aumenta la productividad agrícola.',
-        image: '/assets/abono organico.jpg'
-      },
-      {
-        id: 3,
-        title: 'Gestión de Residuos',
-        description: 'Soluciones sostenibles para el manejo y reciclaje de residuos industriales.',
-        image: '/assets/residuos.jpg'
-      }
-    ];
+  getFirstImage(product: ProductWithImages): string {
+    const img = product.images?.[0];
+    if (!img) return '/assets/residuos.jpg';
+    return img.imageurl.startsWith('http')
+      ? img.imageurl
+      : `${environment.apiUrl.replace('/api', '')}${img.imageurl}`;
+  }
+
+  getFirstAlt(product: ProductWithImages): string {
+    return product.images?.[0]?.alt ?? product.name;
   }
 }

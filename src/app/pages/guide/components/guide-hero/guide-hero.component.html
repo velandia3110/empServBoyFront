@@ -1,0 +1,62 @@
+<section class="relative min-h-[340px] rounded-2xl overflow-hidden flex items-center bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 mx-4 mt-24">
+
+  <!-- Fondo con patrón de puntos -->
+  <div class="absolute inset-0 opacity-20"
+       style="background-image: radial-gradient(circle, #60a5fa 1px, transparent 1px); background-size: 28px 28px;">
+  </div>
+
+  <!-- Imagen de fondo semitransparente (reemplazar src luego) -->
+  <div class="absolute right-0 top-0 h-full w-1/2 opacity-30">
+    <img src="assets/guide-bg.jpg"
+         alt=""
+         class="h-full w-full object-cover" />
+  </div>
+
+  <!-- Gradiente para legibilidad del texto -->
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-950/90 via-blue-950/60 to-transparent"></div>
+
+  <!-- Contenido -->
+  <div class="relative z-10 px-8 md:px-16 py-12 max-w-2xl">
+
+    <!-- Badge -->
+    <span class="inline-block bg-green-400/20 text-green-300 border border-green-400/40
+                 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-6">
+      📹 Video Destacado
+    </span>
+
+    <!-- Título -->
+    <h1 class="text-3xl md:text-5xl font-black text-white leading-tight mb-4">
+      Domina el Arte del
+      <span class="text-green-400 block">Abono Orgánico</span>
+    </h1>
+
+    <!-- Descripción -->
+    <p class="text-blue-200 text-sm md:text-base mb-8 leading-relaxed max-w-md">
+      Descubre cómo transformar los residuos en tu comunidad en vida.
+      Nuestra serie de instructivos te enseña todo, paso a paso.
+    </p>
+
+    <!-- Botón -->
+    <button class="flex items-center gap-3 bg-white text-blue-900 font-bold px-6 py-3
+                   rounded-full hover:bg-green-400 hover:text-white transition-all duration-300 shadow-lg">
+      <span class="flex items-center justify-center w-8 h-8 bg-blue-800 rounded-full text-white text-sm">
+        ▶
+      </span>
+      Ver Video Ahora
+    </button>
+
+  </div>
+
+  <!-- Flechas de navegación -->
+  <div class="absolute bottom-6 right-8 flex gap-3">
+    <button class="w-9 h-9 rounded-full border border-white/30 bg-white/10 text-white
+                   hover:bg-white/20 transition flex items-center justify-center text-sm">
+      ←
+    </button>
+    <button class="w-9 h-9 rounded-full border border-white/30 bg-white/10 text-white
+                   hover:bg-white/20 transition flex items-center justify-center text-sm">
+      →
+    </button>
+  </div>
+
+</section>

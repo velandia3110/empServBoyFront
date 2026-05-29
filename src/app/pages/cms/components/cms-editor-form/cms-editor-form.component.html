@@ -1,0 +1,231 @@
+<!-- Page header banner -->
+<div class="bg-white px-8 py-6 border-b border-gray-200">
+  <div class="flex items-start justify-between gap-6">
+
+    <div>
+      <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
+        Editor Ambiental
+      </span>
+      <h1 class="text-3xl font-extrabold text-blue-900 leading-tight">
+        {{ isEditing ? 'Editar artículo' : 'Nueva publicación educativa' }}
+      </h1>
+      <p class="text-gray-500 mt-2 text-sm max-w-lg">
+        Cree y distribuya contenido sobre sostenibilidad y gestión de recursos para la comunidad EmpServBoy.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2 mt-1 flex-shrink-0">
+      <button
+        (click)="onCancel()"
+        class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">
+        Cancelar
+      </button>
+      <button
+        (click)="onSave()"
+        [disabled]="loading || !title.trim()"
+        class="px-5 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ loading ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Publicar') }}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Form body -->
+<div class="px-8 py-6 pb-24">
+  <div class="flex gap-6">
+
+    <!-- Left column -->
+    <div class="flex-1 space-y-5">
+
+      <!-- Title input -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+          Título del Contenido *
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="title"
+          placeholder="Ej: Importancia del Tratamiento de Aguas Residuales"
+          class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-700 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+        />
+      </div>
+
+      <!-- Bloques multimedia -->
+      @for (block of blocks; track $index) {
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+              Bloque {{ $index + 1 }} — {{ block.type }}
+            </span>
+            <button
+              (click)="removeBlock($index)"
+              class="text-red-400 hover:text-red-600 text-xs font-medium transition-colors">
+              Eliminar bloque
+            </button>
+          </div>
+
+          @if (block.type === 'TEXT') {
+            <!-- Format toolbar -->
+            <div class="flex items-center gap-1 pb-3 mb-3 border-b border-gray-100">
+              <button (click)="applyFormat('bold', $index)"
+                class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded font-bold text-sm"
+                title="Negrita">B</button>
+              <button (click)="applyFormat('italic', $index)"
+                class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded italic text-sm"
+                title="Cursiva">I</button>
+              <button (click)="applyFormat('list', $index)"
+                class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded"
+                title="Lista">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                </svg>
+              </button>
+              <button (click)="applyFormat('link', $index)"
+                class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded"
+                title="Enlace">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                </svg>
+              </button>
+            </div>
+            <textarea
+              [(ngModel)]="block.content"
+              placeholder="Escribe el contenido de este bloque..."
+              rows="6"
+              class="w-full text-sm text-gray-700 placeholder-gray-300 focus:outline-none resize-none leading-relaxed border border-gray-100 rounded-lg p-3"
+            ></textarea>
+          }
+
+          @if (block.type === 'IMAGE') {
+            <div class="space-y-3">
+              <div class="border-2 border-dashed border-gray-200 rounded-lg p-5 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <input type="file" accept="image/*"
+                  (change)="onFileSelected($event, $index)"
+                  class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
+                @if (block.file) {
+                  <p class="text-xs text-green-600 mt-2">Archivo seleccionado: {{ block.file.name }}</p>
+                }
+              </div>
+              <input
+                type="text"
+                [(ngModel)]="block.content"
+                placeholder="Texto alternativo de la imagen (alt)"
+                class="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-700 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+          }
+
+          @if (block.type === 'VIDEO') {
+            <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400 transition-all">
+              <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+              </svg>
+              <input type="url" [(ngModel)]="block.resourceUrl" placeholder="https://youtube.com/watch?v=..."
+                class="flex-1 text-sm text-gray-600 placeholder-gray-300 focus:outline-none min-w-0" />
+            </div>
+          }
+
+        </div>
+      }
+
+      <!-- Agregar bloque -->
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-dashed border-gray-300">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Agregar bloque</p>
+        <div class="flex gap-2">
+          <button (click)="addBlock('TEXT')"
+            class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+            </svg>
+            Texto
+          </button>
+          <button (click)="addBlock('IMAGE')"
+            class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01"/>
+            </svg>
+            Imagen
+          </button>
+          <button (click)="addBlock('VIDEO')"
+            class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Video
+          </button>
+        </div>
+      </div>
+
+      <!-- Error -->
+      @if (errorMsg) {
+        <div class="bg-red-50 border border-red-200 text-red-600 rounded-xl px-5 py-3 text-sm">
+          {{ errorMsg }}
+        </div>
+      }
+
+    </div>
+
+    <!-- Right column -->
+    <div class="w-64 space-y-4 flex-shrink-0">
+
+      <!-- Tips -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 border-l-4 border-l-green-500">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-gray-800">Consejo</p>
+            <p class="text-xs text-gray-500 mt-1">Incluye bloques de texto, imagen y video para mayor alcance e impacto educativo.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloques resumen -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Estructura</label>
+        @if (blocks.length === 0) {
+          <p class="text-xs text-gray-400">Sin bloques aún. Agrega contenido desde la izquierda.</p>
+        } @else {
+          <ul class="space-y-1.5">
+            @for (block of blocks; track $index) {
+              <li class="flex items-center gap-2 text-xs text-gray-500">
+                <span class="w-5 h-5 flex items-center justify-center bg-blue-50 text-blue-600 rounded text-xs font-bold">{{ $index + 1 }}</span>
+                {{ block.type }}
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Bottom status bar -->
+<div class="fixed bottom-0 left-56 right-0 bg-white border-t border-gray-200 px-8 py-3 flex items-center justify-between z-10">
+  <div class="flex items-center gap-6 text-xs text-gray-400">
+    @if (lastSaved) {
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        Último guardado: {{ lastSaved }}
+      </span>
+    }
+    <span>{{ blocks.length }} bloque(s) multimedia</span>
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+    <span class="text-xs font-semibold text-gray-600 uppercase tracking-wide">Sistema Conectado</span>
+  </div>
+</div>

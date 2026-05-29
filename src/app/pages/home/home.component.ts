@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { HeroSectionComponent } from './components/hero-section/hero-section.component';
@@ -10,6 +11,7 @@ import { SectionContactComponent } from './components/section-contact/section-co
   selector: 'app-home',
   standalone: true,
   imports: [
+    CommonModule,
     NavbarComponent,
     HeroSectionComponent,
     SectionProductsComponent,
