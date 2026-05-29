@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../../../core/services/products.service';
 import { ProductWithImages } from '../../../../core/models/product.model';
@@ -9,7 +9,8 @@ import { environment } from '../../../../../environments/environment';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './section-products.component.html',
-  styleUrl: './section-products.component.css'
+  styleUrl: './section-products.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SectionProductsComponent implements OnInit {
   private productsService = inject(ProductsService);

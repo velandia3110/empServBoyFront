@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { QuotesService } from '../../../../core/services/quotes.service';
@@ -10,7 +10,8 @@ import { ProductWithImages } from '../../../../core/models/product.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './section-contact.component.html',
-  styleUrl: './section-contact.component.css'
+  styleUrl: './section-contact.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SectionContactComponent implements OnInit {
   private fb = inject(FormBuilder);
