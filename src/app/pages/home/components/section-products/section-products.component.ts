@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../../../core/services/products.service';
 import { ProductWithImages } from '../../../../core/models/product.model';
@@ -14,6 +15,7 @@ import { environment } from '../../../../../environments/environment';
 })
 export class SectionProductsComponent implements OnInit {
   private productsService = inject(ProductsService);
+  private cdr = inject(ChangeDetectorRef);
 
   products: ProductWithImages[] = [];
   loading = true;
@@ -24,10 +26,12 @@ export class SectionProductsComponent implements OnInit {
       next: data => {
         this.products = data;
         this.loading = false;
+        this.cdr.detectChanges()
       },
       error: () => {
         this.error = true;
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
