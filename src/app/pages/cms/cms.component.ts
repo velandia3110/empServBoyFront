@@ -21,8 +21,12 @@ import { ArticleWithRelations } from '../../core/models/article.model';
 })
 export class CmsComponent {
   view: 'list' | 'editor' = 'list';
-  activeSection = 'gestion';
+  activeSection = 'escritorio';
   articleToEdit: ArticleWithRelations | null = null;
+
+  get isContentSection(): boolean {
+    return ['gestion', 'instructivos', 'blog'].includes(this.activeSection);
+  }
 
   onSectionChange(section: string): void {
     this.activeSection = section;
@@ -30,6 +34,10 @@ export class CmsComponent {
       this.view = 'list';
       this.articleToEdit = null;
     }
+  }
+
+  goToGestion(): void {
+    this.activeSection = 'gestion';
   }
 
   showEditor(): void {
