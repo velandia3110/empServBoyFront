@@ -1,6 +1,6 @@
 import {
   Component, OnInit,
-  ChangeDetectionStrategy, ChangeDetectorRef, inject
+  ChangeDetectionStrategy, ChangeDetectorRef, inject, HostListener
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ArticlesService } from '../../../../core/services/articles.service';
@@ -14,6 +14,7 @@ interface FeaturedCard {
   bgClass: string;
   labelClass: string;
   icon?: string;
+  article: ArticleWithRelations;
 }
 
 interface SecondaryCard {
@@ -24,6 +25,7 @@ interface SecondaryCard {
   isVideo?: boolean;
   cardBg?: string;
   titleColor?: string;
+  article: ArticleWithRelations;
 }
 
 const BG_CLASSES    = ['bg-blue-900', 'bg-gray-800'];
@@ -49,6 +51,24 @@ export class GuideGalleryComponent implements OnInit {
   errorMsg  = '';
   toneladas$ = this.settingsService.toneladas$;
 
+  // ── Drawer ──────────────────────────────
+  selectedArticle: ArticleWithRelations | null = null;
+  drawerOpen = false;
+
+  @HostListener('document:keydown.escape')
+  closeDrawer() {
+    this.drawerOpen = false;
+    this.selectedArticle = null;
+    this.cdr.markForCheck();
+  }
+
+  openArticle(article: ArticleWithRelations) {
+    this.selectedArticle = article;
+    this.drawerOpen = true;
+    this.cdr.markForCheck();
+  }
+
+
   ngOnInit(): void {
     this.articlesService.getAll().subscribe({
       next: articles => {
@@ -58,7 +78,8 @@ export class GuideGalleryComponent implements OnInit {
           image:      this.imageOf(a),
           bgClass:    BG_CLASSES[i % 2],
           labelClass: LABEL_CLASSES[i % 2],
-          icon:       i > 0 ? '+' : undefined
+          icon:       i > 0 ? '+' : undefined,
+          article:    a 
         }));
 
         this.secondaryCards = articles.slice(2).map(a => ({
@@ -68,7 +89,8 @@ export class GuideGalleryComponent implements OnInit {
           badge:       this.hasVideo(a) ? 'Video' : undefined,
           isVideo:     this.hasVideo(a),
           cardBg:      'bg-white',
-          titleColor:  'text-blue-900'
+          titleColor:  'text-blue-900',
+          article:    a 
         }));
 
         this.loading = false;
@@ -82,16 +104,20 @@ export class GuideGalleryComponent implements OnInit {
     });
   }
 
-  private imageOf(a: ArticleWithRelations): string {
+  public imageOf(a: ArticleWithRelations): string {
     return a.multimedia.find(m => m.type === 'IMAGE')?.resourceUrl ?? FALLBACK_IMG;
   }
 
-  private textOf(a: ArticleWithRelations): string {
-    const t = a.multimedia.find(m => m.type === 'TEXT')?.content ?? '';
-    return t.substring(0, 120);
+  videoOf(a: ArticleWithRelations): string | null {
+    return a.multimedia.find(m => m.type === 'VIDEO')?.resourceUrl ?? null;
   }
 
-  private hasVideo(a: ArticleWithRelations): boolean {
+  public textOf(a: ArticleWithRelations): string {
+    const t = a.multimedia.find(m => m.type === 'TEXT')?.content ?? '';
+    return t;
+  }
+
+  public hasVideo(a: ArticleWithRelations): boolean {
     return a.multimedia.some(m => m.type === 'VIDEO');
   }
 }
