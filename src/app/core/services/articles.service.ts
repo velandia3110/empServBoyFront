@@ -43,7 +43,7 @@ export class ArticlesService {
       if (block.type !== 'IMAGE' && block.content?.trim())
                                      fd.append(`multimedia[${i}][content]`,     block.content.trim());
       if (block.resourceUrl?.trim()) fd.append(`multimedia[${i}][resourceUrl]`, block.resourceUrl.trim());
-      if (block.file)                fd.append(`multimedia[${i}][file]`,        block.file);
+      if (block.file && !block.resourceUrl?.trim()) fd.append(`multimedia[${i}][file]`, block.file);
     });
     return fd;
   }
