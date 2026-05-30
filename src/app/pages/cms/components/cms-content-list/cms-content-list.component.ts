@@ -1,4 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component, OnInit, Output, EventEmitter,
+  ChangeDetectionStrategy, ChangeDetectorRef, inject
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ArticlesService } from '../../../../core/services/articles.service';
@@ -9,11 +12,15 @@ import { ArticleWithRelations } from '../../../../core/models/article.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './cms-content-list.component.html',
-  styleUrl: './cms-content-list.component.css'
+  styleUrl: './cms-content-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CmsContentListComponent implements OnInit {
   @Output() newContent = new EventEmitter<void>();
   @Output() editContent = new EventEmitter<ArticleWithRelations>();
+
+  private articlesService = inject(ArticlesService);
+  private cdr = inject(ChangeDetectorRef);
 
   allItems: ArticleWithRelations[] = [];
   filteredItems: ArticleWithRelations[] = [];
@@ -26,8 +33,6 @@ export class CmsContentListComponent implements OnInit {
   pageSize = 4;
   totalPages = 1;
 
-  constructor(private articlesService: ArticlesService) {}
-
   ngOnInit(): void {
     this.load();
   }
@@ -35,15 +40,21 @@ export class CmsContentListComponent implements OnInit {
   load(): void {
     this.loading = true;
     this.errorMsg = '';
+    this.cdr.markForCheck();
+
     this.articlesService.getAll().subscribe({
       next: data => {
         this.allItems = data;
         this.applyFilters();
         this.loading = false;
+        this.cdr.markForCheck();
       },
-      error: () => {
-        this.errorMsg = 'No se pudieron cargar los artículos.';
+      error: (err) => {
         this.loading = false;
+        this.errorMsg = err?.status === 0
+          ? 'No se pudo conectar con el servidor. El backend puede estar iniciando, intenta de nuevo.'
+          : 'No se pudieron cargar los artículos. Intenta de nuevo.';
+        this.cdr.markForCheck();
       }
     });
   }
@@ -64,6 +75,7 @@ export class CmsContentListComponent implements OnInit {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
     this.updatePage();
+    this.cdr.markForCheck();
   }
 
   get pageNumbers(): number[] {

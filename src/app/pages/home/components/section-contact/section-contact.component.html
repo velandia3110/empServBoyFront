@@ -72,10 +72,13 @@
             }
           </div>
 
-          <!-- Productos de interés -->
+          <!-- Productos de interés (opcional) -->
           @if (availableProducts.length > 0) {
             <div>
-              <label class="block text-sm text-gray-600 mb-2">Productos de interés *</label>
+              <label class="block text-sm text-gray-600 mb-2">
+                Productos de interés
+                <span class="text-gray-400 font-normal">(opcional)</span>
+              </label>
               <div class="flex flex-wrap gap-2">
                 @for (product of availableProducts; track product.productId) {
                   <button
@@ -93,9 +96,6 @@
                   </button>
                 }
               </div>
-              @if (submitted && selectedProductIds.size === 0) {
-                <p class="text-red-500 text-xs mt-1">Selecciona al menos un producto.</p>
-              }
             </div>
           }
 

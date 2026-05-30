@@ -8,11 +8,4 @@ import { CommonModule } from '@angular/common';
   templateUrl: './cms-top-bar.component.html',
   styleUrl: './cms-top-bar.component.css'
 })
-export class CmsTopBarComponent {
-  activeTab = 'contenidos';
-
-  tabs = [
-    { id: 'escritorio', label: 'Escritorio' },
-    { id: 'contenidos', label: 'Contenidos' }
-  ];
-}
+export class CmsTopBarComponent {}

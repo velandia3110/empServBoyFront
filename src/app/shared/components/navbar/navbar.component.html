@@ -1,11 +1,11 @@
-<nav class="fixed top-0 w-full bg-gray-100 z-50 border-b">
+<nav class="fixed top-0 w-full bg-gray-100 z-50 border-b border-gray-200">
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex justify-between items-center h-20">
 
       <!-- Logo -->
-      <div class="flex items-center space-x-2">
-        <img src="/assets/logo.png" alt="EmpServBoy" class="h-10" />
-      </div>
+      <a routerLink="/" class="flex items-center leading-none">
+        <img src="/assets/logo.png" alt="EmpServBoy" class="h-14 block" />
+      </a>
 
       <!-- Navigation Links Desktop -->
       <div class="hidden md:flex items-center space-x-10 text-gray-600 font-medium">
@@ -29,11 +29,6 @@
           Productos
         </a>
 
-        <a href="#blog"
-           class="hover:text-blue-600 transition">
-          Blog
-        </a>
-
         <a href="#contacto"
            class="hover:text-blue-600 transition">
           Contacto
@@ -53,38 +48,35 @@
     </div>
 
     <!-- Mobile Menu -->
-    <div *ngIf="isMenuOpen" class="md:hidden pb-4 text-gray-600">
+    @if (isMenuOpen) {
+      <div class="md:hidden pb-4 text-gray-600">
 
-      <a routerLink="/"
-         routerLinkActive="text-blue-600 font-medium"
-         [routerLinkActiveOptions]="{ exact: true }"
-         (click)="closeMenu()"
-         class="block px-4 py-2 hover:text-blue-600">
-        Inicio
-      </a>
+        <a routerLink="/"
+           routerLinkActive="text-blue-600 font-medium"
+           [routerLinkActiveOptions]="{ exact: true }"
+           (click)="closeMenu()"
+           class="block px-4 py-2 hover:text-blue-600">
+          Inicio
+        </a>
 
-      <a routerLink="/guide"
-         routerLinkActive="text-blue-600 font-medium"
-         (click)="closeMenu()"
-         class="block px-4 py-2 hover:text-blue-600">
-        Instructivo
-      </a>
+        <a routerLink="/guide"
+           routerLinkActive="text-blue-600 font-medium"
+           (click)="closeMenu()"
+           class="block px-4 py-2 hover:text-blue-600">
+          Instructivo
+        </a>
 
-      <a href="#productos" (click)="closeMenu()"
-         class="block px-4 py-2 hover:text-blue-600">
-        Productos
-      </a>
+        <a href="#productos" (click)="closeMenu()"
+           class="block px-4 py-2 hover:text-blue-600">
+          Productos
+        </a>
 
-      <a href="#blog" (click)="closeMenu()"
-         class="block px-4 py-2 hover:text-blue-600">
-        Blog
-      </a>
+        <a href="#contacto" (click)="closeMenu()"
+           class="block px-4 py-2 hover:text-blue-600">
+          Contacto
+        </a>
 
-      <a href="#contacto" (click)="closeMenu()"
-         class="block px-4 py-2 hover:text-blue-600">
-        Contacto
-      </a>
-
-    </div>
+      </div>
+    }
   </div>
 </nav>

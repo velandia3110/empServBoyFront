@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component, OnInit,
+  ChangeDetectionStrategy, ChangeDetectorRef, inject
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ArticlesService } from '../../../../core/services/articles.service';
+import { SettingsService } from '../../../../core/services/settings.service';
+import { ArticleWithRelations } from '../../../../core/models/article.model';
 
-// Interfaz para las tarjetas grandes (featured)
 interface FeaturedCard {
   step: string;
   title: string;
@@ -11,7 +16,6 @@ interface FeaturedCard {
   icon?: string;
 }
 
-// Interfaz para las tarjetas pequeñas (secondary)
 interface SecondaryCard {
   title: string;
   description: string;
@@ -20,80 +24,74 @@ interface SecondaryCard {
   isVideo?: boolean;
   cardBg?: string;
   titleColor?: string;
-  checks?: string[];
 }
+
+const BG_CLASSES    = ['bg-blue-900', 'bg-gray-800'];
+const LABEL_CLASSES = ['text-green-400', 'text-blue-300'];
+const FALLBACK_IMG  = 'assets/guide-bg.jpg';
 
 @Component({
   selector: 'app-guide-gallery',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './guide-gallery.component.html',
-  styleUrl: './guide-gallery.component.css'
+  styleUrl: './guide-gallery.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuideGalleryComponent implements OnInit {
+  private articlesService = inject(ArticlesService);
+  private settingsService = inject(SettingsService);
+  private cdr = inject(ChangeDetectorRef);
 
-  // Tarjetas grandes superiores
-  featuredCards: FeaturedCard[] = [];
-
-  // Tarjetas medianas inferiores
+  featuredCards: FeaturedCard[]   = [];
   secondaryCards: SecondaryCard[] = [];
+  loading   = true;
+  errorMsg  = '';
+  toneladas$ = this.settingsService.toneladas$;
 
   ngOnInit(): void {
-    this.loadFeaturedCards();
-    this.loadSecondaryCards();
+    this.articlesService.getAll().subscribe({
+      next: articles => {
+        this.featuredCards = articles.slice(0, 2).map((a, i) => ({
+          step:       `Paso ${String(i + 1).padStart(2, '0')}`,
+          title:      a.title,
+          image:      this.imageOf(a),
+          bgClass:    BG_CLASSES[i % 2],
+          labelClass: LABEL_CLASSES[i % 2],
+          icon:       i > 0 ? '+' : undefined
+        }));
+
+        this.secondaryCards = articles.slice(2).map(a => ({
+          title:       a.title,
+          description: this.textOf(a),
+          image:       this.imageOf(a),
+          badge:       this.hasVideo(a) ? 'Video' : undefined,
+          isVideo:     this.hasVideo(a),
+          cardBg:      'bg-white',
+          titleColor:  'text-blue-900'
+        }));
+
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.loading  = false;
+        this.errorMsg = 'No se pudieron cargar los instructivos.';
+        this.cdr.markForCheck();
+      }
+    });
   }
 
-  private loadFeaturedCards(): void {
-    this.featuredCards = [
-      {
-        step: 'Paso 01: Clasificación',
-        title: 'Manual de Separación en Origen',
-        image: 'assets/separacion.jpg',       // ← reemplazar con tu imagen
-        bgClass: 'bg-blue-900',
-        labelClass: 'text-green-400',
-        icon: undefined
-      },
-      {
-        step: 'Paso 02: Purificación',
-        title: 'Filtrado Circular de Lixiviados',
-        image: 'assets/filtrado.jpg',          // ← reemplazar con tu imagen
-        bgClass: 'bg-gray-800',
-        labelClass: 'text-blue-300',
-        icon: '+'
-      }
-    ];
+  private imageOf(a: ArticleWithRelations): string {
+    return a.multimedia.find(m => m.type === 'IMAGE')?.resourceUrl ?? FALLBACK_IMG;
   }
 
-  private loadSecondaryCards(): void {
-    this.secondaryCards = [
-      {
-        title: 'Guía de Abono Maduro',
-        description: 'Instrucciones técnicas para identificar el punto exacto de maduración del compostaje industrial.',
-        image: 'assets/abono-maduro.jpg',      // ← reemplazar con tu imagen
-        badge: undefined,
-        isVideo: false,
-        cardBg: 'bg-white',
-        titleColor: 'text-blue-900'
-      },
-      {
-        title: 'Optimización de Rutas de Recolección',
-        description: 'Duración: 4:21 min  •  Nivel: Técnico',
-        image: 'assets/camion.jpg',            // ← puedes usar assets/camion.jpg que ya tienes
-        badge: 'Cápsula de Video',
-        isVideo: true,
-        cardBg: 'bg-white',
-        titleColor: 'text-blue-900'
-      },
-      {
-        title: '100% Circular',
-        description: 'Cómo cerramos el ciclo de nutrientes en cada proceso de EmpServBoy.',
-        image: 'assets/circular.jpg',          // ← reemplazar con tu imagen
-        badge: undefined,
-        isVideo: false,
-        cardBg: 'bg-blue-900',
-        titleColor: 'text-white',
-        checks: ['Cero Desperdicio', 'Bio-Energía']
-      }
-    ];
+  private textOf(a: ArticleWithRelations): string {
+    const t = a.multimedia.find(m => m.type === 'TEXT')?.content ?? '';
+    return t.substring(0, 120);
+  }
+
+  private hasVideo(a: ArticleWithRelations): boolean {
+    return a.multimedia.some(m => m.type === 'VIDEO');
   }
 }

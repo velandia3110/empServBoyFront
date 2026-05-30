@@ -32,14 +32,18 @@ export class ArticlesService {
   }
 
   private buildFormData(title: string, multimedia: MultimediaBlock[]): FormData {
+    console.table(multimedia.map((b, i) => ({
+      i, type: b.type, resourceUrl: b.resourceUrl || '(vacío)', hasFile: !!b.file
+    })));
     const fd = new FormData();
     fd.append('title', title);
     multimedia.forEach((block, i) => {
-      if (block.multimediaId) fd.append(`multimedia[${i}][multimediaId]`, block.multimediaId);
+      if (block.multimediaId)        fd.append(`multimedia[${i}][multimediaId]`, block.multimediaId);
       fd.append(`multimedia[${i}][type]`, block.type);
-      if (block.content)     fd.append(`multimedia[${i}][content]`, block.content);
-      if (block.resourceUrl) fd.append(`multimedia[${i}][resourceUrl]`, block.resourceUrl);
-      if (block.file)        fd.append(`multimedia[${i}][file]`, block.file);
+      if (block.type !== 'IMAGE' && block.content?.trim())
+                                     fd.append(`multimedia[${i}][content]`,     block.content.trim());
+      if (block.resourceUrl?.trim()) fd.append(`multimedia[${i}][resourceUrl]`, block.resourceUrl.trim());
+      if (block.file)                fd.append(`multimedia[${i}][file]`,        block.file);
     });
     return fd;
   }

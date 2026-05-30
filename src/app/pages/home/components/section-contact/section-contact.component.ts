@@ -59,10 +59,6 @@ export class SectionContactComponent implements OnInit {
     this.errorMessage = '';
 
     if (this.contactForm.invalid) return;
-    if (this.selectedProductIds.size === 0) {
-      this.errorMessage = 'Por favor selecciona al menos un producto de interés.';
-      return;
-    }
 
     this.loading = true;
     const { name, email, phone, message } = this.contactForm.value;

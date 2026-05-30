@@ -1,48 +1,89 @@
-<section class="py-16 px-4 bg-gray-50">
-  <div class="max-w-7xl mx-auto">
+<section class="cta-section">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-md">
+  <!-- Elementos decorativos de fondo -->
+  <div class="deco-circle deco-circle-1"></div>
+  <div class="deco-circle deco-circle-2"></div>
+  <div class="deco-dots"></div>
 
-      <!-- Lado izquierdo: Texto y botones -->
-      <div class="bg-white p-8 md:p-12 flex flex-col justify-center">
+  <div class="cta-container">
 
-        <h2 class="text-2xl md:text-3xl font-bold text-blue-900 mb-4 leading-tight">
-          ¿Necesitas un instructivo personalizado para tu empresa?
-        </h2>
+    <!-- Columna izquierda: contenido -->
+    <div class="cta-content">
 
-        <p class="text-gray-500 text-sm md:text-base mb-8 leading-relaxed">
-          Nuestros expertos ambientales desarrollan guías técnicas a medida
-          para la gestión de residuos sólidos y orgánicos en entornos industriales.
-        </p>
+      <span class="cta-eyebrow">
+        <svg class="eyebrow-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 008 20C19 20 22 3 22 3c-1 2-8 2-8 2 4-5 8-2 8-2C22 3 19 0 17 8z"/>
+        </svg>
+        Servicio personalizado
+      </span>
 
-        <div class="flex flex-wrap gap-3">
-          <button class="bg-blue-800 text-white px-5 py-2.5 rounded-lg font-semibold
-                         hover:bg-blue-900 transition-colors duration-200 text-sm">
-            Solicitar Consultoría
-          </button>
+      <h2 class="cta-title">
+        ¿Necesitas un instructivo
+        <span class="cta-title-accent"> personalizado</span>
+        para tu empresa?
+      </h2>
 
-          <button class="border border-gray-300 text-gray-700 px-5 py-2.5 rounded-lg font-semibold
-                         hover:bg-gray-50 transition-colors duration-200 text-sm">
-            Ver Documentación
-          </button>
-        </div>
+      <p class="cta-desc">
+        Nuestros expertos ambientales desarrollan guías técnicas a medida
+        para la gestión de residuos sólidos y orgánicos en entornos industriales.
+      </p>
 
+      <!-- Beneficios -->
+      <ul class="cta-benefits">
+        <li class="benefit-item">
+          <span class="benefit-dot"></span>
+          Diagnóstico inicial sin costo
+        </li>
+        <li class="benefit-item">
+          <span class="benefit-dot"></span>
+          Guía técnica adaptada a tu industria
+        </li>
+        <li class="benefit-item">
+          <span class="benefit-dot"></span>
+          Acompañamiento de expertos certificados
+        </li>
+      </ul>
+
+      <!-- CTA -->
+      <button class="cta-btn" (click)="goToContact()">
+        <span>Solicitar Consultoría</span>
+        <svg class="cta-btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- Columna derecha: imagen + stat -->
+    <div class="cta-visual">
+
+      <div class="cta-img-wrap">
+        <img src="assets/boyaca.jpg"
+             alt="Expertos ambientales"
+             class="cta-img" />
+        <div class="cta-img-overlay"></div>
       </div>
 
-      <!-- Lado derecho: Imagen oscura -->
-      <div class="relative min-h-48 md:min-h-0 bg-gray-900 overflow-hidden">
-        <img src="assets/guide-cta.jpg"
-             alt="Instructivo personalizado"
-             class="w-full h-full object-cover opacity-50" />
-
-        <!-- Overlay con patrón -->
-        <div class="absolute inset-0 opacity-10"
-             style="background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
-                    background-size: 20px 20px;">
+      <!-- Tarjeta flotante de stat -->
+      <div class="cta-stat-card">
+        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0
+               3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806
+               1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0
+               01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42
+               3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0
+               00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42
+               3.42 0 013.138-3.138z"/>
+        </svg>
+        <div class="stat-body">
+          <span class="stat-number">+10</span>
+          <span class="stat-label">Años de experiencia</span>
         </div>
       </div>
 
     </div>
 
   </div>
+
 </section>
