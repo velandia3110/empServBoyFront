@@ -17,8 +17,10 @@ export class GuideHeroComponent implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
 
   slides: CarouselSlide[] = [
+    /* 
     { image: 'assets/Banner-celular-1.jpeg',      alt: 'Todos por el bienestar ambiental' },
-    { image: 'assets/Banner-promocional-mobil.png', alt: 'Bio-insumos y servicios agrícolas' },
+    { image: 'assets/Banner-promocional-mobil.png', alt: 'Bio-insumos y servicios agrícolas' }, 
+    */
     { image: 'assets/banner-web-1.jpeg',           alt: 'Bio-insumos agrícolas - El planeta necesita más cultivos orgánicos' },
     { image: 'assets/Banner-web-capa-ozono.png',   alt: 'Día internacional de la preservación de la capa de ozono' },
     { image: 'assets/Borrador3.png',               alt: 'Código de colores para la separación de residuos' },

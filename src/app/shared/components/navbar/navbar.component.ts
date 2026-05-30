@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // RouterLink: permite usar routerLink="..." en el HTML
 // RouterLinkActive: permite usar routerLinkActive="..." para estilos activos
@@ -17,6 +17,19 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class NavbarComponent {
   isMenuOpen = false;
+  scrolled = false;
+
+  navLinks = [
+    { label: 'Inicio', routerLink: '/', exact: true },
+    { label: 'Instructivo', routerLink: '/guide', exact: false },
+    { label: 'Productos', href: '#products' },
+    { label: 'Contacto', href: '#contacto' },
+  ];
+
+  @HostListener('window:scroll')
+  onScroll() {
+    this.scrolled = window.scrollY > 20;
+  }
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;

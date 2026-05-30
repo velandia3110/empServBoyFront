@@ -1,82 +1,93 @@
-<nav class="fixed top-0 w-full bg-gray-100 z-50 border-b border-gray-200">
+<nav class="fixed top-0 w-full z-50 transition-all duration-300"
+     [class.bg-white/95]="scrolled"
+     [class.shadow-sm]="scrolled"
+     [class.shadow-slate-200/80]="scrolled"
+     [class.backdrop-blur-md]="scrolled"
+     [class.bg-transparent]="!scrolled">
+
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex justify-between items-center h-20">
 
       <!-- Logo -->
-      <a routerLink="/" class="flex items-center leading-none">
-        <img src="/assets/logo.png" alt="EmpServBoy" class="h-14 block" />
+      <a routerLink="/" class="flex items-center group">
+        <img src="/assets/logo.png" alt="EmpServBoy"
+             class="h-18 block transition-transform duration-200 group-hover:scale-105" />
       </a>
 
-      <!-- Navigation Links Desktop -->
-      <div class="hidden md:flex items-center space-x-10 text-gray-600 font-medium">
-        
-        <!-- Activo -->
-        <a routerLink="/"
-           routerLinkActive="text-blue-600 border-b-2 border-blue-600 pb-1"
-           [routerLinkActiveOptions]="{ exact: true }"
-           class="hover:text-blue-600 transition">
-          Inicio
-        </a>
-
-        <a routerLink="/guide"
-           routerLinkActive="text-blue-600 border-b-2 border-blue-600 pb-1"
-           class="hover:text-blue-600 transition">
-          Instructivo
-        </a>
-
-        <a href="#products"
-           class="hover:text-blue-600 transition">
-          Productos
-        </a>
-
-        <a href="#contacto"
-           class="hover:text-blue-600 transition">
-          Contacto
-        </a>
+      <!-- Links desktop -->
+      <div class="hidden md:flex items-center gap-1">
+        @for (link of navLinks; track link.label) {
+          @if (link.routerLink) {
+            <a [routerLink]="link.routerLink"
+               routerLinkActive="nav-link-active"
+               [routerLinkActiveOptions]="link.exact ? { exact: true } : {}"
+               class="nav-link">
+              {{ link.label }}
+            </a>
+          } @else {
+            <a [href]="link.href" class="nav-link">{{ link.label }}</a>
+          }
+        }
       </div>
 
-      <!-- Mobile Button -->
-      <div class="md:hidden">
-        <button (click)="toggleMenu()" class="text-gray-600 hover:text-blue-600">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
-      </div>
+      <!-- Botón hamburguesa mobile -->
+      <button (click)="toggleMenu()" aria-label="Menú"
+              class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5
+                     rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm
+                     hover:border-slate-300 active:scale-95 transition-all duration-200">
+        <span class="w-5 h-0.5 bg-slate-600 rounded-full transition-all duration-300"
+              [class.rotate-45]="isMenuOpen"
+              [class.translate-y-2]="isMenuOpen"></span>
+        <span class="w-5 h-0.5 bg-slate-600 rounded-full transition-all duration-300"
+              [class.opacity-0]="isMenuOpen"
+              [class.scale-x-0]="isMenuOpen"></span>
+        <span class="w-5 h-0.5 bg-slate-600 rounded-full transition-all duration-300"
+              [class.-rotate-45]="isMenuOpen"
+              [class.-translate-y-2]="isMenuOpen"></span>
+      </button>
 
     </div>
 
-    <!-- Mobile Menu -->
-    @if (isMenuOpen) {
-      <div class="md:hidden pb-4 text-gray-600">
-
-        <a routerLink="/"
-           routerLinkActive="text-blue-600 font-medium"
-           [routerLinkActiveOptions]="{ exact: true }"
-           (click)="closeMenu()"
-           class="block px-4 py-2 hover:text-blue-600">
-          Inicio
-        </a>
-
-        <a routerLink="/guide"
-           routerLinkActive="text-blue-600 font-medium"
-           (click)="closeMenu()"
-           class="block px-4 py-2 hover:text-blue-600">
-          Instructivo
-        </a>
-
-        <a href="#productos" (click)="closeMenu()"
-           class="block px-4 py-2 hover:text-blue-600">
-          Productos
-        </a>
-
-        <a href="#contacto" (click)="closeMenu()"
-           class="block px-4 py-2 hover:text-blue-600">
-          Contacto
-        </a>
-
+    <!-- Mobile menu -->
+    <div class="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+         [class.max-h-0]="!isMenuOpen"
+         [class.max-h-96]="isMenuOpen"
+         [class.opacity-0]="!isMenuOpen"
+         [class.opacity-100]="isMenuOpen">
+      <div class="pb-4 pt-1 flex flex-col gap-1 border-t border-slate-100">
+        @for (link of navLinks; track link.label) {
+          @if (link.routerLink) {
+            <a [routerLink]="link.routerLink"
+               routerLinkActive="text-green-600 bg-green-50 font-semibold"
+               [routerLinkActiveOptions]="link.exact ? { exact: true } : {}"
+               (click)="closeMenu()"
+               class="px-4 py-2.5 rounded-xl text-sm text-slate-600
+                      hover:bg-slate-50 hover:text-[#1e3a5f] transition-all duration-150">
+              {{ link.label }}
+            </a>
+          } @else {
+            <a [href]="link.href" (click)="closeMenu()"
+               class="px-4 py-2.5 rounded-xl text-sm text-slate-600
+                      hover:bg-slate-50 hover:text-[#1e3a5f] transition-all duration-150">
+              {{ link.label }}
+            </a>
+          }
+        }
+        <div class="px-4 pt-2">
+          <a routerLink="/login" (click)="closeMenu()"
+             class="flex items-center justify-center gap-2 bg-[#1e3a5f] text-white
+                    text-sm font-semibold px-5 py-3 rounded-xl w-full
+                    hover:bg-[#162d4a] active:scale-95 transition-all duration-200">
+            <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804
+                       M15 10a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            Ingreso Administrador
+          </a>
+        </div>
       </div>
-    }
+    </div>
+
   </div>
 </nav>

@@ -1,46 +1,113 @@
-<section id="products" class="py-20 bg-gray-100">
+<section id="products" class="py-24 bg-gradient-to-b from-gray-50 to-white">
   <div class="max-w-7xl mx-auto px-6">
 
-    <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-blue-800 mb-2">
+    <!-- Encabezado -->
+    <div class="text-center mb-14">
+      <span class="inline-block text-xs font-bold uppercase tracking-widest
+                   text-green-600 bg-green-50 px-4 py-1.5 rounded-full
+                   ring-1 ring-green-100 mb-4">
+        Catálogo
+      </span>
+      <h2 class="text-4xl font-black text-[#1e3a5f] mb-3 tracking-tight">
         Productos Destacados
       </h2>
-      <p class="text-gray-500">
+      <p class="text-gray-400 max-w-md mx-auto text-sm leading-relaxed">
         Tecnología y naturaleza unidas para soluciones sostenibles en Colombia.
       </p>
     </div>
 
+    <!-- Skeletons -->
     @if (loading) {
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         @for (_ of [1,2,3]; track $index) {
-          <div class="bg-white rounded-2xl p-4 shadow-sm animate-pulse">
-            <div class="rounded-xl mb-4 h-40 w-full bg-gray-200"></div>
-            <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div class="h-4 bg-gray-200 rounded w-full mb-1"></div>
-            <div class="h-4 bg-gray-200 rounded w-2/3"></div>
-          </div>
-        }
-      </div>
-    } @else if (error) {
-      <p class="text-center text-red-500">No se pudieron cargar los productos. Intenta más tarde.</p>
-    } @else {
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        @for (product of products; track product.productId) {
-          <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition">
-            <img [src]="getFirstImage(product)" [alt]="getFirstAlt(product)"
-                 class="rounded-xl mb-4 h-40 w-full object-cover" />
-            <h3 class="text-lg font-semibold text-blue-800">{{ product.name }}</h3>
-            <p class="text-gray-500 text-sm mt-2">{{ product.description }}</p>
-            <a class="text-blue-600 text-sm mt-4 inline-block hover:underline cursor-pointer">
-              Ver detalles →
-            </a>
+          <div class="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse">
+            <div class="h-52 bg-gradient-to-br from-slate-100 to-slate-200"></div>
+            <div class="p-5 flex flex-col gap-3">
+              <div class="h-5 bg-slate-100 rounded-lg w-3/4"></div>
+              <div class="h-3.5 bg-slate-100 rounded w-full"></div>
+              <div class="h-3.5 bg-slate-100 rounded w-2/3"></div>
+              <div class="h-8 bg-slate-100 rounded-lg w-1/3 mt-2"></div>
+            </div>
           </div>
         }
       </div>
     }
 
-    <div class="text-center mt-10">
-      <button class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
+    <!-- Error -->
+    @else if (error) {
+      <div class="flex flex-col items-center gap-3 py-20 text-slate-400">
+        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        </svg>
+        <p class="text-sm font-medium">No se pudieron cargar los productos. Intenta más tarde.</p>
+      </div>
+    }
+
+    <!-- Cards -->
+    @else {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        @for (product of products; track product.productId) {
+          <article class="group bg-white rounded-2xl overflow-hidden shadow-sm
+                          border border-slate-100/80
+                          hover:shadow-xl hover:shadow-slate-200/60
+                          hover:-translate-y-1.5 transition-all duration-300 ease-out
+                          flex flex-col">
+
+            <!-- Imagen -->
+            <div class="relative overflow-hidden h-52 bg-slate-50">
+              <img [src]="getFirstImage(product)" [alt]="getFirstAlt(product)"
+                   class="w-full h-full object-cover
+                          group-hover:scale-105 transition-transform duration-500 ease-out" />
+              <!-- Overlay al hover -->
+              <div class="absolute inset-0 bg-gradient-to-t from-[#1e3a5f]/40 to-transparent
+                          opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+              <!-- Badge categoría -->
+              <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[#1e3a5f]
+                           text-[0.6rem] font-bold uppercase tracking-wider
+                           px-2.5 py-1 rounded-full shadow-sm">
+                Sostenible
+              </span>
+            </div>
+
+            <!-- Cuerpo -->
+            <div class="p-5 flex flex-col flex-1 gap-2">
+              <h3 class="text-base font-bold text-[#1e3a5f] leading-snug
+                         group-hover:text-green-700 transition-colors duration-200">
+                {{ product.name }}
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed flex-1 line-clamp-3">
+                {{ product.description }}
+              </p>
+
+              <button class="mt-3 inline-flex items-center gap-1.5 text-green-600 text-sm
+                             font-bold self-start group/link
+                             hover:text-green-700 transition-colors">
+                Ver detalles
+                <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-1"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+              </button>
+            </div>
+
+          </article>
+        }
+      </div>
+    }
+
+    <!-- CTA -->
+    <div class="text-center mt-14">
+      <button class="group inline-flex items-center gap-3 bg-[#1e3a5f] text-white
+                     px-8 py-4 rounded-xl font-bold text-sm
+                     hover:bg-[#162d4a] hover:shadow-lg hover:shadow-[#1e3a5f]/20
+                     active:scale-95 transition-all duration-200">
+        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
         Más información sobre productos
       </button>
     </div>
