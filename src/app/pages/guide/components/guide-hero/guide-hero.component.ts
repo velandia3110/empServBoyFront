@@ -19,6 +19,7 @@ export class GuideHeroComponent implements OnInit, OnDestroy {
   slides: CarouselSlide[] = [
     { image: 'assets/banner-web-1.jpeg',           alt: 'Bio-insumos agrícolas - El planeta necesita más cultivos orgánicos' },
     { image: 'assets/Banner-web-capa-ozono.png',   alt: 'Día internacional de la preservación de la capa de ozono' },
+    { image: 'assets/carrusel.jpeg',             alt: 'Bio-insumos agrícolas - El planeta necesita más cultivos orgánicos' },
   ];
 
   current = 0;
