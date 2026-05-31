@@ -1,1 +1,150 @@
 /* Section Products styles */
+/* ── Widget flotante TNS ── */
+.tns-widget {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 2rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  background: linear-gradient(145deg, #16a34a, #15803d, #166534);
+  border-radius: 1.1rem;
+  padding: 0.85rem 1rem 0.8rem;
+  box-shadow:
+    0 8px 32px rgba(21,128,61,0.45),
+    0 2px 8px rgba(0,0,0,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  cursor: default;
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1),
+              box-shadow 0.25s;
+  min-width: 5.5rem;
+  text-align: center;
+}
+
+.tns-widget:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow:
+    0 16px 40px rgba(21,128,61,0.5),
+    0 4px 12px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
+/* Resplandor de fondo */
+.tns-glow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 1.4rem;
+  background: radial-gradient(ellipse at center, rgba(34,197,94,0.3), transparent 70%);
+  z-index: -1;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+
+/* Icono hoja + punto activo */
+.tns-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.2rem;
+}
+
+.tns-leaf {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: rgba(255,255,255,0.9);
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.2));
+}
+
+.tns-pulse {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #bbf7d0;
+  box-shadow: 0 0 0 0 rgba(187,247,208,0.6);
+  animation: dotPulse 2.5s ease-out infinite;
+}
+
+@keyframes dotPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(187,247,208,0.7); }
+  70%  { box-shadow: 0 0 0 8px rgba(187,247,208,0); }
+  100% { box-shadow: 0 0 0 0 rgba(187,247,208,0); }
+}
+
+/* Número + unidad en línea */
+.tns-info {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  line-height: 1;
+}
+
+.tns-number {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.tns-unit {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tns-caption {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+/* Tooltip */
+.tns-tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.6rem);
+  right: 0;
+  background: rgba(15, 23, 42, 0.92);
+  color: #f1f5f9;
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.5;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.6rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  text-align: left;
+}
+
+/* Flecha del tooltip */
+.tns-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 1.2rem;
+  border: 5px solid transparent;
+  border-top-color: rgba(15, 23, 42, 0.92);
+}
+
+.tns-widget:hover .tns-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}

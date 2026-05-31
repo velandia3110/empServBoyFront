@@ -6,6 +6,10 @@ import { CommonModule } from '@angular/common';
 import { ArticlesService } from '../../../../core/services/articles.service';
 import { SettingsService } from '../../../../core/services/settings.service';
 import { ArticleWithRelations } from '../../../../core/models/article.model';
+import {
+  DomSanitizer,
+  SafeResourceUrl
+} from '@angular/platform-browser';
 
 interface FeaturedCard {
   step: string;
@@ -25,12 +29,14 @@ interface SecondaryCard {
   isVideo?: boolean;
   cardBg?: string;
   titleColor?: string;
+  videoTitle?: string;
+  videoThumbnail?: string;
   article: ArticleWithRelations;
 }
 
-const BG_CLASSES    = ['bg-blue-900', 'bg-gray-800'];
+const BG_CLASSES = ['bg-blue-900', 'bg-gray-800'];
 const LABEL_CLASSES = ['text-green-400', 'text-blue-300'];
-const FALLBACK_IMG  = 'assets/guide-bg.jpg';
+const FALLBACK_IMG = 'assets/guide-bg.jpg';
 
 @Component({
   selector: 'app-guide-gallery',
@@ -44,11 +50,14 @@ export class GuideGalleryComponent implements OnInit {
   private articlesService = inject(ArticlesService);
   private settingsService = inject(SettingsService);
   private cdr = inject(ChangeDetectorRef);
+  private sanitizer = inject(DomSanitizer);
 
-  featuredCards: FeaturedCard[]   = [];
+  selectedVideoUrl: SafeResourceUrl | null = null;
+
+  featuredCards: FeaturedCard[] = [];
   secondaryCards: SecondaryCard[] = [];
-  loading   = true;
-  errorMsg  = '';
+  loading = true;
+  errorMsg = '';
   toneladas$ = this.settingsService.toneladas$;
 
   // ── Drawer ──────────────────────────────
@@ -63,41 +72,59 @@ export class GuideGalleryComponent implements OnInit {
   }
 
   openArticle(article: ArticleWithRelations) {
-    this.selectedArticle = article;
-    this.drawerOpen = true;
-    this.cdr.markForCheck();
+
+  this.selectedArticle = article;
+
+  const video = this.videoOf(article);
+
+  if (video && this.isYoutube(video)) {
+
+    const embedUrl =
+      this.youtubeEmbed(video);
+
+    this.selectedVideoUrl =
+      this.sanitizer
+        .bypassSecurityTrustResourceUrl(embedUrl);
+
+  } else {
+
+    this.selectedVideoUrl = null;
   }
+
+  this.drawerOpen = true;
+  this.cdr.markForCheck();
+}
 
 
   ngOnInit(): void {
     this.articlesService.getAll().subscribe({
       next: articles => {
         this.featuredCards = articles.slice(0, 2).map((a, i) => ({
-          step:       `Paso ${String(i + 1).padStart(2, '0')}`,
-          title:      a.title,
-          image:      this.imageOf(a),
-          bgClass:    BG_CLASSES[i % 2],
+          step: `Paso ${String(i + 1).padStart(2, '0')}`,
+          title: a.title,
+          image: this.imageOf(a),
+          bgClass: BG_CLASSES[i % 2],
           labelClass: LABEL_CLASSES[i % 2],
-          icon:       i > 0 ? '+' : undefined,
-          article:    a 
+          icon: i > 0 ? '+' : undefined,
+          article: a
         }));
 
         this.secondaryCards = articles.slice(2).map(a => ({
-          title:       a.title,
+          title: a.title,
           description: this.textOf(a),
-          image:       this.imageOf(a),
-          badge:       this.hasVideo(a) ? 'Video' : undefined,
-          isVideo:     this.hasVideo(a),
-          cardBg:      'bg-white',
-          titleColor:  'text-blue-900',
-          article:    a 
+          image: this.imageOf(a),
+          badge: this.hasVideo(a) ? 'Video' : undefined,
+          isVideo: this.hasVideo(a),
+          cardBg: 'bg-white',
+          titleColor: 'text-blue-900',
+          article: a
         }));
 
         this.loading = false;
         this.cdr.markForCheck();
       },
       error: () => {
-        this.loading  = false;
+        this.loading = false;
         this.errorMsg = 'No se pudieron cargar los instructivos.';
         this.cdr.markForCheck();
       }
@@ -105,7 +132,28 @@ export class GuideGalleryComponent implements OnInit {
   }
 
   public imageOf(a: ArticleWithRelations): string {
-    return a.multimedia.find(m => m.type === 'IMAGE')?.resourceUrl ?? FALLBACK_IMG;
+
+    const image =
+      a.multimedia.find(m => m.type === 'IMAGE');
+
+    if (image) {
+      return image.resourceUrl!;
+    }
+
+    const video =
+      a.multimedia.find(m => m.type === 'VIDEO');
+
+    if (video) {
+
+      const thumb =
+        this.getYoutubeThumbnail(video.resourceUrl!);
+
+      if (thumb) {
+        return thumb;
+      }
+    }
+
+    return FALLBACK_IMG;
   }
 
   videoOf(a: ArticleWithRelations): string | null {
@@ -120,4 +168,37 @@ export class GuideGalleryComponent implements OnInit {
   public hasVideo(a: ArticleWithRelations): boolean {
     return a.multimedia.some(m => m.type === 'VIDEO');
   }
+
+  getYoutubeThumbnail(url: string): string | null {
+
+    const match =
+      url.match(/youtube\.com\/watch\?v=([^&]+)/) ||
+      url.match(/youtu\.be\/([^?]+)/);
+
+    if (!match) {
+      return null;
+    }
+
+    return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+  }
+
+  isYoutube(url: string): boolean {
+    return url.includes('youtube.com')
+      || url.includes('youtu.be');
+  }
+
+  youtubeEmbed(url: string): string {
+
+    const match =
+      url.match(/youtube\.com\/watch\?v=([^&]+)/) ||
+      url.match(/youtu\.be\/([^?]+)/);
+
+    if (!match) {
+      return '';
+    }
+
+    return `https://www.youtube.com/embed/${match[1]}`;
+  }
+
+
 }

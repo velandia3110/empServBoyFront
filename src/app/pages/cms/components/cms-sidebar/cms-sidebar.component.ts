@@ -21,7 +21,8 @@ export class CmsSidebarComponent {
   navItems: NavItem[] = [
     { id: 'escritorio', label: 'Escritorio' },
     { id: 'gestion', label: 'Gestión de Contenidos' },
-    { id: 'configuracion', label: 'Configuración' }
+    { id: 'configuracion', label: 'Configuración' },
+    { id: 'productos', label: 'Productos' },
   ];
 
   constructor(private router: Router) {}

@@ -2,7 +2,7 @@
 .carousel-wrapper {
   position: relative;
   width: auto;
-  height: clamp(280px, 52vw, 580px);
+  height: clamp(220px, 28.5vw, 400px);
   border-radius: 1.25rem;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
@@ -42,15 +42,6 @@
   transform: scale(1);
   transition: transform 8s ease-in-out;
   will-change: transform;
-}
-
-.carousel-img.zoom {
-  animation: kenburns 8s ease-in-out forwards;
-}
-
-@keyframes kenburns {
-  from { transform: scale(1);    }
-  to   { transform: scale(1.07); }
 }
 
 /* ── Gradiente inferior ── */

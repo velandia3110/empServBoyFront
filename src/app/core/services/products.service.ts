@@ -21,8 +21,15 @@ export class ProductsService {
     return this.http.post<ProductWithImages>(this.base, formData);
   }
 
-  update(id: string, payload: { name?: string; description?: string }): Observable<ProductWithImages> {
-    return this.http.put<ProductWithImages>(`${this.base}/${id}`, payload);
+  update(
+    id: string,
+    formData: FormData
+  ): Observable<ProductWithImages> {
+
+    return this.http.put<ProductWithImages>(
+      `${this.base}/${id}`,
+      formData
+    );
   }
 
   delete(id: string): Observable<{ message: string }> {

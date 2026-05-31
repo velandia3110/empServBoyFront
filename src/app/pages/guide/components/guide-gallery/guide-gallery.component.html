@@ -11,9 +11,11 @@
           Cada publicación es un paso hacia la sostenibilidad.
         </p>
       </div>
+
       <!-- Widget flotante de toneladas -->
-      <div class="tns-widget">
+      <div class="tns-widget" title="Cantidad de toneladas de residuos orgánicos procesados en el 2026">
         <div class="tns-glow"></div>
+        <div class="tns-tooltip">Toneladas de residuos orgánicos<br>procesados en el 2026</div>
         <div class="tns-icon-wrap">
           <svg class="tns-leaf" viewBox="0 0 24 24" fill="currentColor">
             <path
@@ -22,12 +24,12 @@
           <span class="tns-pulse"></span>
         </div>
         <div class="tns-info">
-          <span class="tns-number">{{ toneladas$ | async }}</span>
+          <span class="tns-number"># {{ toneladas$ | async }}</span>
           <span class="tns-unit">Ton.</span>
         </div>
         <span class="tns-caption">Recicladas</span>
       </div>
-    </div>
+    </div><!-- /gallery-header -->
 
     <!-- Estado: cargando -->
     @if (loading) {
@@ -80,16 +82,10 @@
       @for (card of featuredCards; track card.title) {
       <article class="featured-card" [ngClass]="card.bgClass" (click)="openArticle(card.article)">
 
-        <!-- Imagen de fondo -->
         <img [src]="card.image" [alt]="card.title" class="featured-bg-img" />
-
-        <!-- Gradiente -->
         <div class="featured-overlay"></div>
-
-        <!-- Número decorativo -->
         <span class="featured-number">{{ card.step.split(' ')[1] }}</span>
 
-        <!-- Contenido -->
         <div class="featured-content">
           <span class="featured-step-badge" [ngClass]="card.labelClass">
             {{ card.step }}
@@ -113,36 +109,35 @@
       @for (card of secondaryCards; track card.title) {
       <article class="secondary-card" (click)="openArticle(card.article)">
 
-        <!-- Imagen -->
         <div class="secondary-img-wrap">
           <img [src]="card.image" [alt]="card.title" class="secondary-img" />
 
-          <!-- Badge -->
           @if (card.badge) {
           <span class="secondary-badge">{{ card.badge }}</span>
           }
 
-          <!-- Botón play si es video -->
           @if (card.isVideo) {
-          <div class="play-btn">
-            <svg fill="currentColor" viewBox="0 0 24 24" class="play-icon">
-              <path d="M8 5v14l11-7L8 5z" />
-            </svg>
+          <div class="video-overlay">
+            <div class="play-circle">
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7L8 5z" />
+              </svg>
+            </div>
+            <span class="video-label">Ver video</span>
           </div>
           }
 
-          <!-- Hover overlay -->
           <div class="secondary-hover-overlay">
             <button class="featured-btn" (click)="$event.stopPropagation(); openArticle(card.article)">
               Leer instructivo
               <svg class="btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </button>
           </div>
         </div>
 
-        <!-- Cuerpo -->
         <div class="secondary-body">
           <h4 class="secondary-title">{{ card.title }}</h4>
           <p class="secondary-desc">{{ card.description }}</p>
@@ -151,86 +146,63 @@
       </article>
       }
     </div>
-    }
-    }
-  </div>
+    }<!-- /secondaryCards -->
+
+    }<!-- /else contenido -->
+
+  </div><!-- /gallery-container -->
 </section>
+
 <!-- ══════════════════════════════════════
      DRAWER
 ══════════════════════════════════════ -->
 @if (drawerOpen && selectedArticle) {
-  <!-- Backdrop -->
-  <div class="fixed inset-0 z-[200] bg-black/50 backdrop-blur-sm"
-       (click)="closeDrawer()"></div>
+<div class="fixed inset-0 z-[200] bg-black/50 backdrop-blur-sm" (click)="closeDrawer()"></div>
 
-  <!-- Modal centrado -->
-  <div class="fixed inset-0 z-[201] flex items-center justify-center p-4 pointer-events-none">
-    <article class="modal-panel pointer-events-auto w-full max-w-4xl max-h-[90vh]
-                    bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+<div class="fixed inset-0 z-[201] flex items-center justify-center p-4 pointer-events-none">
+  <article class="modal-panel pointer-events-auto w-full max-w-6xl max-h-[90vh]
+                  bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
 
-      <!-- Header -->
-      <div class="flex items-start justify-between gap-4 px-8 py-6 border-b border-slate-100 flex-shrink-0">
-        <div class="flex flex-col gap-1">
-          <span class="text-xs font-bold uppercase tracking-widest text-green-500">Instructivo</span>
-          <h2 class="text-xl font-extrabold text-[#1e3a5f] leading-snug">
-            {{ selectedArticle.title }}
-          </h2>
-        </div>
-        <button (click)="closeDrawer()"
-                class="flex-shrink-0 w-9 h-9 flex items-center justify-center
-                       rounded-lg border border-slate-200 text-slate-400
-                       hover:bg-slate-100 hover:text-[#1e3a5f] transition-colors"
-                aria-label="Cerrar">
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
+    <div class="flex items-start justify-between gap-4 px-8 py-6 border-b border-slate-100 flex-shrink-0">
+      <div class="flex flex-col gap-1">
+        <span class="text-xs font-bold uppercase tracking-widest text-green-500">Instructivo</span>
+        <h2 class="text-xl font-extrabold text-[#1e3a5f] leading-snug">
+          {{ selectedArticle.title }}
+        </h2>
       </div>
+      <button (click)="closeDrawer()" class="flex-shrink-0 w-9 h-9 flex items-center justify-center
+                     rounded-lg border border-slate-200 text-slate-400
+                     hover:bg-slate-100 hover:text-[#1e3a5f] transition-colors" aria-label="Cerrar">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
 
-      <!-- Body con scroll -->
-      <div class="overflow-y-auto flex-1 px-8 py-6 flex flex-col gap-6">
+    <div class="overflow-y-auto flex-1 px-8 py-6 flex flex-col gap-6">
+      <div class="flex flex-col md:flex-row gap-6">
 
-        <!-- Layout de dos columnas en pantallas medianas+ -->
-        <div class="flex flex-col md:flex-row gap-6">
-
-          <!-- Imagen -->
-          <div class="md:w-2/5 flex-shrink-0">
-            <img [src]="imageOf(selectedArticle)"
-                 [alt]="selectedArticle.title"
-                 class="w-full aspect-video object-cover rounded-xl bg-slate-100" />
-
-            <!-- Video debajo de la imagen si existe -->
-            @if (videoOf(selectedArticle)) {
-              <div class="mt-4">
-                <span class="text-[0.65rem] font-bold uppercase tracking-widest text-green-500 block mb-2">
-                  Video instructivo
-                </span>
-                <video class="w-full rounded-xl bg-black"
-                       [src]="videoOf(selectedArticle)!"
-                       controls preload="metadata">
-                </video>
-              </div>
-            }
-          </div>
-
-          <!-- Texto -->
-          @if (textOf(selectedArticle)) {
-            <div class="flex-1 flex flex-col gap-2">
-              <span class="text-[0.65rem] font-bold uppercase tracking-widest text-green-500">
-                Descripción
-              </span>
-              <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
-                {{ textOf(selectedArticle) }}
-              </p>
-            </div>
+        <div class="w-full flex-shrink-0">
+          @if (selectedVideoUrl) {
+          <iframe class="w-full aspect-video rounded-xl border border-slate-200 shadow-lg"
+            [src]="selectedVideoUrl" loading="lazy" allowfullscreen></iframe>
           }
 
+          @if (textOf(selectedArticle)) {
+          <div class="prose prose-slate max-w-none text-slate-700 leading-7">
+            <span class="text-[0.65rem] font-bold uppercase tracking-widest text-green-500">
+              Descripción
+            </span>
+            <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+              {{ textOf(selectedArticle) }}
+            </p>
+          </div>
+          }
         </div>
 
       </div>
+    </div>
 
-    </article>
-  </div>
-
+  </article>
+</div>
 }

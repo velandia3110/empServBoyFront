@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../../../core/services/products.service';
 import { ProductWithImages } from '../../../../core/models/product.model';
 import { environment } from '../../../../../environments/environment';
-
+import { SettingsService } from '../../../../core/services/settings.service';
+ 
 @Component({
   selector: 'app-section-products',
   standalone: true,
@@ -14,10 +15,12 @@ import { environment } from '../../../../../environments/environment';
 export class SectionProductsComponent implements OnInit {
   private productsService = inject(ProductsService);
   private cdr = inject(ChangeDetectorRef);
+    private settingsService = inject(SettingsService);
 
   products: ProductWithImages[] = [];
   loading = true;
   error = false;
+  toneladas$ = this.settingsService.toneladas$;
 
   ngOnInit(): void {
     this.productsService.getAll().subscribe({

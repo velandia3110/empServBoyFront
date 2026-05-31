@@ -7,6 +7,9 @@ import { CmsEditorFormComponent } from './components/cms-editor-form/cms-editor-
 import { CmsContentListComponent } from './components/cms-content-list/cms-content-list.component';
 import { SettingsService } from '../../core/services/settings.service';
 import { ArticleWithRelations } from '../../core/models/article.model';
+import { ProductWithImages } from '../../core/models/product.model';
+import { CmsProductListComponent } from './components/cms-product-list/cms-product-list.component';
+import { CmsProductFormComponent } from './components/cms-product-form/cms-product-form.component';
 
 @Component({
   selector: 'app-cms',
@@ -17,7 +20,9 @@ import { ArticleWithRelations } from '../../core/models/article.model';
     CmsSidebarComponent,
     CmsTopBarComponent,
     CmsEditorFormComponent,
-    CmsContentListComponent
+    CmsContentListComponent,
+    CmsProductListComponent,
+    CmsProductFormComponent
   ],
   templateUrl: './cms.component.html',
   styleUrl: './cms.component.css'
@@ -25,15 +30,21 @@ import { ArticleWithRelations } from '../../core/models/article.model';
 export class CmsComponent {
   private settingsService = inject(SettingsService);
 
-  view: 'list' | 'editor' = 'list';
+
+
+  view: 'list' | 'editor' | 'product-editor' = 'list';
   activeSection = 'escritorio';
   articleToEdit: ArticleWithRelations | null = null;
-
-  toneladasInput  = this.settingsService.toneladas;
-  toneladasSaved  = false;
+  productToEdit: ProductWithImages | null = null;
+  toneladasInput = this.settingsService.toneladas;
+  toneladasSaved = false;
 
   get isContentSection(): boolean {
     return this.activeSection === 'gestion';
+  }
+
+  get isProductSection(): boolean {
+    return this.activeSection === 'productos';
   }
 
   onSectionChange(section: string): void {
@@ -46,6 +57,23 @@ export class CmsComponent {
       this.view = 'list';
       this.articleToEdit = null;
     }
+    if (this.view === 'product-editor') {
+      this.view = 'list';
+      this.productToEdit = null;
+    }
+  }
+  showProductEditor(): void {
+    this.productToEdit = null;
+    this.view = 'product-editor';
+  }
+  editProduct(product: ProductWithImages): void {
+    this.productToEdit = product;
+    this.view = 'product-editor';
+  }
+  showList(): void {
+    this.articleToEdit = null;
+    this.productToEdit = null;
+    this.view = 'list';
   }
 
   saveToneladas(): void {
@@ -68,8 +96,5 @@ export class CmsComponent {
     this.view = 'editor';
   }
 
-  showList(): void {
-    this.articleToEdit = null;
-    this.view = 'list';
-  }
+  
 }
