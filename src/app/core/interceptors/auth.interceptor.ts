@@ -6,9 +6,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const platformId = inject(PLATFORM_ID);
   if (!isPlatformBrowser(platformId)) return next(req);
 
-  const isExternal = req.url.startsWith('http') && !req.url.includes('onrender.com');
-  if (isExternal) return next(req);
-
   const token = localStorage.getItem('auth_token');
   if (token) {
     const cloned = req.clone({
